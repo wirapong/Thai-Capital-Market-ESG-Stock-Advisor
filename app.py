@@ -502,39 +502,44 @@ def main():
         # แสดงกราฟทันทีที่ดึงข้อมูลเสร็จ (ไม่ต้องรอ AI คิด)
         st.plotly_chart(create_price_chart(data, result['type']), use_container_width=True)
         
-        # 2. ให้ AI วิเคราะห์และพิมพ์ผลลัพธ์แบบสตรีมมิ่ง (Streaming)
+# 2. ให้ AI วิเคราะห์และพิมพ์ผลลัพธ์แบบสตรีมมิ่ง (Streaming)
         st.markdown("### 🤖 ผลการวิเคราะห์จาก AI")
         
         # ใช้ Generator เพื่อทำ Streaming UI
         def stream_response():
+            is_thinking = False
+            for chunk in advisor.model.stream([HumanMessage(content=result['prompt'])]):
+                text = chunk.content
+                if "<think>" in text: is_thinking = True
+                if "</think>" in text: 
                     is_thinking = False
-                    for chunk in advisor.model.stream([HumanMessage(content=result['prompt'])]):
-                        text = chunk.content
-                        if "<think>" in text: is_thinking = True
-                        if "</think>" in text: 
-                            is_thinking = False
-                            text = text.replace("</think>", "")
-                            continue
-                        if not is_thinking:
-                            yield text
+                    text = text.replace("</think>", "")
+                    continue
+                if not is_thinking:
+                    yield text
 
-                # 💡 เพิ่มบล็อก try...except เพื่อดักจับตอน Google ตัดการเชื่อมต่อเพราะเกินโควต้า
-                try:
-                    full_analysis = st.write_stream(stream_response)
+        # 💡 บล็อก try...except ต้องอยู่ระดับเดียวกับ def stream_response()
+        try:
+            # 1. พิมพ์ข้อความพร้อมกับเก็บข้อความทั้งหมดไว้ในตัวแปร full_analysis
+            full_analysis = st.write_stream(stream_response)
+            
+            # 2. นำข้อความที่ได้มาสกัดตัวเลขและพล็อตกราฟโดนัท
+            sentiment_chart = extract_and_plot_sentiment(full_analysis)
+            
+            # 3. ถ้าดึงตัวเลขสำเร็จ ให้แสดงกราฟไว้ด้านล่างข้อความ
+            if sentiment_chart:
+                st.markdown("---")
+                st.markdown("<h3 style='text-align: center;'>📊 สัดส่วนอารมณ์ตลาดจากข่าวสาร (Market Sentiment)</h3>", unsafe_allow_html=True)
+                
+                # จัดกราฟให้อยู่กึ่งกลางโดยใช้ columns
+                col_spacer1, col_chart, col_spacer2 = st.columns([1, 2, 1])
+                with col_chart:
+                    st.plotly_chart(sentiment_chart, use_container_width=True)
                     
-                    sentiment_chart = extract_and_plot_sentiment(full_analysis)
-                    
-                    if sentiment_chart:
-                        st.markdown("---")
-                        st.markdown("<h3 style='text-align: center;'>📊 สัดส่วนอารมณ์ตลาดจากข่าวสาร (Market Sentiment)</h3>", unsafe_allow_html=True)
-                        
-                        col_spacer1, col_chart, col_spacer2 = st.columns([1, 2, 1])
-                        with col_chart:
-                            st.plotly_chart(sentiment_chart, use_container_width=True)
-                            
-                except Exception as e:
-                    # ดักจับ ClientError หรือ Error ที่เกิดจากการสตรีม
-                    st.error("⏳ คำขอเกินขีดจำกัดของ Google AI แบบใช้ฟรี (จำกัด 5 ครั้งต่อนาที) กรุณารอประมาณ 1 นาทีแล้วลองใหม่อีกครั้งครับ")
+        except Exception as e:
+            # ดักจับ ClientError หรือ Error ที่เกิดจากโควต้าเต็ม
+            st.error("⏳ คำขอเกินขีดจำกัดของ Google AI แบบใช้ฟรี (จำกัด 5 ครั้งต่อนาที) กรุณารอประมาณ 1 นาทีแล้วลองกดวิเคราะห์ใหม่อีกครั้งครับ")
+
 
         # 1. พิมพ์ข้อความพร้อมกับเก็บข้อความทั้งหมดไว้ในตัวแปร full_analysis
         full_analysis = st.write_stream(stream_response)
