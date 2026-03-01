@@ -507,16 +507,34 @@ def main():
         
         # ใช้ Generator เพื่อทำ Streaming UI
         def stream_response():
-            is_thinking = False
-            for chunk in advisor.model.stream([HumanMessage(content=result['prompt'])]):
-                text = chunk.content
-                if "<think>" in text: is_thinking = True
-                if "</think>" in text: 
                     is_thinking = False
-                    text = text.replace("</think>", "")
-                    continue
-                if not is_thinking:
-                    yield text
+                    for chunk in advisor.model.stream([HumanMessage(content=result['prompt'])]):
+                        text = chunk.content
+                        if "<think>" in text: is_thinking = True
+                        if "</think>" in text: 
+                            is_thinking = False
+                            text = text.replace("</think>", "")
+                            continue
+                        if not is_thinking:
+                            yield text
+
+                # 💡 เพิ่มบล็อก try...except เพื่อดักจับตอน Google ตัดการเชื่อมต่อเพราะเกินโควต้า
+                try:
+                    full_analysis = st.write_stream(stream_response)
+                    
+                    sentiment_chart = extract_and_plot_sentiment(full_analysis)
+                    
+                    if sentiment_chart:
+                        st.markdown("---")
+                        st.markdown("<h3 style='text-align: center;'>📊 สัดส่วนอารมณ์ตลาดจากข่าวสาร (Market Sentiment)</h3>", unsafe_allow_html=True)
+                        
+                        col_spacer1, col_chart, col_spacer2 = st.columns([1, 2, 1])
+                        with col_chart:
+                            st.plotly_chart(sentiment_chart, use_container_width=True)
+                            
+                except Exception as e:
+                    # ดักจับ ClientError หรือ Error ที่เกิดจากการสตรีม
+                    st.error("⏳ คำขอเกินขีดจำกัดของ Google AI แบบใช้ฟรี (จำกัด 5 ครั้งต่อนาที) กรุณารอประมาณ 1 นาทีแล้วลองใหม่อีกครั้งครับ")
 
         # 1. พิมพ์ข้อความพร้อมกับเก็บข้อความทั้งหมดไว้ในตัวแปร full_analysis
         full_analysis = st.write_stream(stream_response)
