@@ -33,7 +33,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 # Configuration สำหรับ Gemini
 MODEL_CONFIG = {
-    "model": "gemini-1.5-flash-latest", # แนะนำ 1.5-pro สำหรับความฉลาดสูงสุด (หรือใช้ gemini-1.5-flash หากต้องการความเร็ว)
+    "model": "gemini-1.5-flash", # แนะนำ 1.5-pro สำหรับความฉลาดสูงสุด (หรือใช้ gemini-1.5-flash หากต้องการความเร็ว)
     "temperature": 0.1,
 }
 
