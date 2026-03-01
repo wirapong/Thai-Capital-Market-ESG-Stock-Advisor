@@ -230,40 +230,30 @@ def fetch_thai_stock_news(symbol: str, limit: int = 5) -> list:
         return []
         
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
+@st.cache_data(ttl=CACHE_TTL, show_spinner=False)
 def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
-    """ดึงข้อมูลหุ้นไทย พร้อมระบบป้องกันการถูกบล็อก (Rate Limit) จาก Yahoo Finance"""
+    """ดึงข้อมูลหุ้นไทย พร้อมเว้นระยะเวลาเพื่อป้องกัน Rate Limit จาก Yahoo Finance"""
     try:
         if not symbol.upper().endswith('.BK'):
             symbol = f"{symbol.upper().strip()}.BK"
             
-        # 💡 1. สร้าง Session และใส่ User-Agent เพื่อปลอมตัวเป็นคนใช้งานผ่านเว็บเบราว์เซอร์ปกติ
-        session = requests.Session()
-        session.headers.update({
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-        })
+        # 💡 1. ปล่อยให้ yfinance จัดการเรื่อง Session เองตามคำแนะนำของระบบ
+        stock = yf.Ticker(symbol)
         
-        # ส่ง Session เข้าไปใน yfinance
-        stock = yf.Ticker(symbol, session=session)
-        
-        # 💡 2. ดึงข้อมูลแบบเรียงลำดับ (Sequential) ทีละขั้นตอน เพื่อป้องกัน Yahoo บล็อก
-        # ดึงราคาประวัติ
+        # 💡 2. ดึงข้อมูลแบบเรียงลำดับ (Sequential) และเว้นระยะหายใจ
         price_history = stock.history(period='6mo', interval='1d')
         if price_history.empty:
             raise ValueError(f"ไม่มีข้อมูลราคาสำหรับ {symbol}")
             
-        # เว้นระยะหายใจให้เซิร์ฟเวอร์ Yahoo นิดหน่อย
-        time.sleep(0.5) 
+        time.sleep(0.5) # เว้นระยะให้เซิร์ฟเวอร์ Yahoo นิดหน่อย
         
-        # ดึงข้อมูลบริษัท
         info = stock.info
         
-        # เว้นระยะหายใจอีกนิด
-        time.sleep(0.5)
+        time.sleep(0.5) # เว้นระยะอีกนิด
         
-        # ดึงข้อมูล ESG
         esg_data = stock.sustainability
         
-        # ส่วนข่าวภาษาไทย ให้ดึงแยกต่างหาก (เพราะมาจาก Google News ไม่โดน Yahoo บล็อก)
+        # ส่วนข่าวภาษาไทย ให้ดึงแยกต่างหาก
         thai_news = fetch_thai_stock_news(symbol)
         
         # คำนวณเทคนิคอล
