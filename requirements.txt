@@ -3,6 +3,6 @@ pandas
 yfinance
 plotly
 langchain-core
-langchain-google-genai
+langchain-google-genai<3.0.0
 pycoingecko
 requests
