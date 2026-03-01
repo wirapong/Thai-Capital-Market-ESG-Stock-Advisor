@@ -1,5 +1,6 @@
 import re
 import os
+from langchain_google_genai import ChatGoogleGenerativeAI
 import logging
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional, List
@@ -37,8 +38,6 @@ MODEL_CONFIG = {
 }
 
 @st.cache_resource
-
-from langchain_google_genai import ChatGoogleGenerativeAI
 
 # Configuration สำหรับ Gemini
 MODEL_CONFIG = {
