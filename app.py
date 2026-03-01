@@ -36,22 +36,34 @@ MODEL_CONFIG = {
 }
 
 @st.cache_resource
+import os
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+# Configuration สำหรับ Gemini
+MODEL_CONFIG = {
+    # 💡 เปลี่ยนเป็นรุ่น flash ซึ่งเป็นรุ่นฟรีที่เร็วและเสถียรที่สุดของ Google ตอนนี้
+    "model": "gemini-1.5-flash", 
+    "temperature": 0.1,
+}
+
+CACHE_TTL = 300  # 5 minutes cache
+
+# Initialize model with error handling
+@st.cache_resource
 def get_model():
     try:
-        # การดึง API Key จาก Streamlit Secrets (แนะนำสำหรับตอนนำขึ้น Cloud)
-        # หรือถ้าทดสอบในเครื่อง สามารถดึงจาก os.environ.get("GOOGLE_API_KEY") ได้
+        # ดึง API Key จาก Streamlit Secrets
         api_key = st.secrets.get("GOOGLE_API_KEY") or os.environ.get("GOOGLE_API_KEY")
         
         if not api_key:
-            st.warning("⚠️ ไม่พบ GOOGLE_API_KEY กรุณาตั้งค่า API Key ก่อนใช้งาน")
+            st.warning("⚠️ ไม่พบ GOOGLE_API_KEY กรุณาไปตั้งค่าใน Advanced Settings > Secrets ของ Streamlit Cloud")
             return None
             
         return ChatGoogleGenerativeAI(
             model=MODEL_CONFIG["model"],
             temperature=MODEL_CONFIG["temperature"],
-            google_api_key=api_key,
-            # เพิ่ม streaming=True เพื่อให้รองรับการพิมพ์ตอบแบบเรียลไทม์ที่เราทำไว้
-            streaming=True 
+            api_key=api_key, # 💡 ใช้พารามิเตอร์ api_key (บางเวอร์ชันของไลบรารีจะไม่รับ google_api_key แล้ว)
+            max_retries=2,   # เพิ่มระบบลองใหม่กรณีเน็ตเวิร์คกระตุก
         )
     except Exception as e:
         st.error(f"Failed to initialize Gemini model: {e}")
