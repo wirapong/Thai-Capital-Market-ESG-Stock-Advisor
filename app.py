@@ -10,7 +10,7 @@ import streamlit as st
 import yfinance as yf
 import plotly.graph_objects as go
 from langchain_core.messages import HumanMessage
-from langchain_ollama import ChatOllama
+#from langchain_ollama import ChatOllama
 from pycoingecko import CoinGeckoAPI
 
 import urllib.parse
@@ -21,22 +21,40 @@ import requests
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Configuration
-MODEL_CONFIG = {
-    "model": "qwen3:8b",
-    "temperature": 0.1,
-    "timeout": 30
-}
+
 
 CACHE_TTL = 300  # 5 minutes cache
 
 # Initialize model with error handling
+import os
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+# Configuration สำหรับ Gemini
+MODEL_CONFIG = {
+    "model": "gemini-1.5-pro", # แนะนำ 1.5-pro สำหรับความฉลาดสูงสุด (หรือใช้ gemini-1.5-flash หากต้องการความเร็ว)
+    "temperature": 0.1,
+}
+
 @st.cache_resource
 def get_model():
     try:
-        return ChatOllama(**MODEL_CONFIG)
+        # การดึง API Key จาก Streamlit Secrets (แนะนำสำหรับตอนนำขึ้น Cloud)
+        # หรือถ้าทดสอบในเครื่อง สามารถดึงจาก os.environ.get("GOOGLE_API_KEY") ได้
+        api_key = st.secrets.get("GOOGLE_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+        
+        if not api_key:
+            st.warning("⚠️ ไม่พบ GOOGLE_API_KEY กรุณาตั้งค่า API Key ก่อนใช้งาน")
+            return None
+            
+        return ChatGoogleGenerativeAI(
+            model=MODEL_CONFIG["model"],
+            temperature=MODEL_CONFIG["temperature"],
+            google_api_key=api_key,
+            # เพิ่ม streaming=True เพื่อให้รองรับการพิมพ์ตอบแบบเรียลไทม์ที่เราทำไว้
+            streaming=True 
+        )
     except Exception as e:
-        st.error(f"Failed to initialize model: {e}")
+        st.error(f"Failed to initialize Gemini model: {e}")
         return None
 
 model = get_model()
