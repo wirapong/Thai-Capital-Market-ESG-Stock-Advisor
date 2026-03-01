@@ -229,36 +229,45 @@ def fetch_thai_stock_news(symbol: str, limit: int = 5) -> list:
         logger.warning(f"ไม่สามารถดึงข่าวภาษาไทยสำหรับ {symbol} ได้: {e}")
         return []
         
+@st.cache_data(ttl=CACHE_TTL, show_spinner=False)
 def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
-    """ดึงข้อมูลหุ้นไทยด้วยเทคนิค Parallel Fetching เพื่อความเร็วสูงสุด"""
+    """ดึงข้อมูลหุ้นไทย พร้อมระบบป้องกันการถูกบล็อก (Rate Limit) จาก Yahoo Finance"""
     try:
         if not symbol.upper().endswith('.BK'):
             symbol = f"{symbol.upper().strip()}.BK"
             
-        stock = yf.Ticker(symbol)
+        # 💡 1. สร้าง Session และใส่ User-Agent เพื่อปลอมตัวเป็นคนใช้งานผ่านเว็บเบราว์เซอร์ปกติ
+        session = requests.Session()
+        session.headers.update({
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        })
         
-        # ⚡ ดึงข้อมูลขนานกัน 4 เส้นทางเพื่อลดเวลาโหลด
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            future_info = executor.submit(lambda: stock.info)
-            future_hist = executor.submit(lambda: stock.history(period='6mo', interval='1d'))
-            
-            # 💡 สลับมาใช้ฟังก์ชันดึงข่าวไทยแทน
-            future_thai_news = executor.submit(lambda: fetch_thai_stock_news(symbol)) 
-            
-            future_esg = executor.submit(lambda: stock.sustainability)
-            
-            info = future_info.result()
-            price_history = future_hist.result()
-            thai_news = future_thai_news.result()
-            esg_data = future_esg.result()
+        # ส่ง Session เข้าไปใน yfinance
+        stock = yf.Ticker(symbol, session=session)
         
+        # 💡 2. ดึงข้อมูลแบบเรียงลำดับ (Sequential) ทีละขั้นตอน เพื่อป้องกัน Yahoo บล็อก
+        # ดึงราคาประวัติ
+        price_history = stock.history(period='6mo', interval='1d')
         if price_history.empty:
             raise ValueError(f"ไม่มีข้อมูลราคาสำหรับ {symbol}")
             
-        technical_patterns = calculate_technical_patterns(price_history)
+        # เว้นระยะหายใจให้เซิร์ฟเวอร์ Yahoo นิดหน่อย
+        time.sleep(0.5) 
         
-        # 💡 ส่งต่อข้อมูลข่าวไทยไปใช้งาน (โค้ดที่ซ้ำกันถูกลบออกแล้ว)
-        recent_news = thai_news
+        # ดึงข้อมูลบริษัท
+        info = stock.info
+        
+        # เว้นระยะหายใจอีกนิด
+        time.sleep(0.5)
+        
+        # ดึงข้อมูล ESG
+        esg_data = stock.sustainability
+        
+        # ส่วนข่าวภาษาไทย ให้ดึงแยกต่างหาก (เพราะมาจาก Google News ไม่โดน Yahoo บล็อก)
+        thai_news = fetch_thai_stock_news(symbol)
+        
+        # คำนวณเทคนิคอล
+        technical_patterns = calculate_technical_patterns(price_history)
         
         if esg_data is None or esg_data.empty:
             esg_metrics = {"ESG_Score": 65.4, "Environment_Score": 15.2, "Social_Score": 25.1, "Governance_Score": 25.1}
@@ -271,7 +280,7 @@ def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
             "current_price": round(price_history['Close'].iloc[-1], 2),
             "volume": info.get('volume', price_history['Volume'].iloc[-1] if not price_history.empty else 0),
             "technical_analysis": technical_patterns,
-            "recent_news": recent_news,
+            "recent_news": thai_news,
             "esg_metrics": esg_metrics,
             "price_stats": {
                 "current_price": round(price_history['Close'].iloc[-1], 2),
@@ -281,6 +290,7 @@ def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
             }
         }
     except Exception as e:
+        logger.error(f"Error in fetch_set_esg: {e}")
         return {"error": f"Unable to fetch SET data for {symbol}. Error: {e}"}
 
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
