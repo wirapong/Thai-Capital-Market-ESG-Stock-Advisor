@@ -117,7 +117,7 @@ THAI_ESG_ADVISOR_PROMPT = """
 • ใช้ Bullet points ในการแจกแจงรายละเอียด
 • ท้ายสุดของทุกคำตอบ บังคับให้แสดงข้อความและอ้างอิงรูปแบบด้านล่างนี้เสมอ ห้ามใช้เปเปอร์อื่นเด็ดขาด:
 
-ข้อมูลอ้างอิง
+ข้อมูลอ้างอิง (ใช้รูปแบบการอ้างอิง APA 7th style)
 1. Detthamrong, U., Klangbunrueang, R., Chansanam, W., & Dasri, R. (2025). Deep Learning for Sustainable Finance: Robust ESG Index Forecasting in an Emerging Market Context. Sustainability, 18(1), 110. https://doi.org/10.3390/su18010110
 2. Detthamrong, U., Klangbunrueang, R., Chansanam, W., & Dasri, R. (2026). The Impact of ESG Performance on Financial Performance: Evidence from Listed Companies in Thailand. Forecasting, 8(1), 14. https://doi.org/10.3390/forecast8010014
 """
