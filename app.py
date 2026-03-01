@@ -1,18 +1,16 @@
 import re
 import os
-from langchain_google_genai import ChatGoogleGenerativeAI
-import logging
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional, List
 import time
-import concurrent.futures
+import logging
+from datetime import datetime
+from typing import Dict, Any, Optional
 
 import pandas as pd
 import streamlit as st
 import yfinance as yf
 import plotly.graph_objects as go
 from langchain_core.messages import HumanMessage
-#from langchain_ollama import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI
 from pycoingecko import CoinGeckoAPI
 
 import urllib.parse
@@ -23,22 +21,13 @@ import requests
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
-
 CACHE_TTL = 300  # 5 minutes cache
-
-# Initialize model with error handling
-import os
-from langchain_google_genai import ChatGoogleGenerativeAI
 
 # Configuration สำหรับ Gemini
 MODEL_CONFIG = {
-    "model": "gemini-2.5-flash", # แนะนำ 1.5-pro สำหรับความฉลาดสูงสุด (หรือใช้ gemini-1.5-flash หากต้องการความเร็ว)
+    "model": "gemini-2.5-flash", 
     "temperature": 0.1,
 }
-
-
-CACHE_TTL = 300  # 5 minutes cache
 
 # Initialize model with error handling
 @st.cache_resource
@@ -51,10 +40,8 @@ def get_model():
             st.warning("⚠️ ไม่พบ GOOGLE_API_KEY กรุณาไปตั้งค่าใน Advanced Settings > Secrets")
             return None
             
-        # 💡 บังคับยัดค่าลง Environment Variable ให้ LangChain ดึงไปใช้เองอัตโนมัติ (ชัวร์สุด)
         os.environ["GOOGLE_API_KEY"] = api_key
         
-        # 💡 เรียกใช้แค่นี้พอ ไม่ต้องส่งพารามิเตอร์ api_key เข้าไปแล้ว
         return ChatGoogleGenerativeAI(
             model=MODEL_CONFIG["model"],
             temperature=MODEL_CONFIG["temperature"]
@@ -179,17 +166,10 @@ def calculate_technical_patterns(price_history: pd.DataFrame) -> Dict[str, Any]:
         "Upper_Band": round(upper_band.iloc[-1], 2), "Lower_Band": round(lower_band.iloc[-1], 2)
     }
 
-# ⚡ ใช้ Cache เพื่อให้ไม่ต้องดึง API ซ้ำหากเป็นหุ้นตัวเดิม
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
-
 def fetch_thai_stock_news(symbol: str, limit: int = 5) -> list:
-    """
-    ดึงข่าวหุ้นไทยแบบรวมศูนย์ (ครอบคลุม efinanceThai, Kaohoon, SET News ฯลฯ)
-    """
-    # ลบ .BK ออกเพื่อให้ค้นหาเป็นชื่อหุ้นปกติ เช่น "PTT"
+    """ดึงข่าวหุ้นไทยแบบรวมศูนย์ (ครอบคลุม efinanceThai, Kaohoon, SET News ฯลฯ)"""
     clean_symbol = symbol.replace('.BK', '').strip()
-    
-    # สร้างคำค้นหา เช่น "PTT หุ้น"
     query = urllib.parse.quote(f"{clean_symbol} หุ้น")
     url = f"https://news.google.com/rss/search?q={query}&hl=th&gl=TH&ceid=TH:th"
     
@@ -197,16 +177,13 @@ def fetch_thai_stock_news(symbol: str, limit: int = 5) -> list:
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         
-        # แปลงข้อมูล XML ที่ได้มา
         root = ET.fromstring(response.text)
         news_list = []
         
-        # วนลูปดึงข่าวล่าสุดตามจำนวน limit
         for item in root.findall('.//item')[:limit]:
             title_full = item.find('title').text if item.find('title') is not None else "ไม่มีหัวข้อข่าว"
             pub_date = item.find('pubDate').text if item.find('pubDate') is not None else ""
             
-            # Google News มักจะใส่ชื่อสำนักข่าวไว้ท้ายสุด เช่น "ปตท. กำไรพุ่ง - efinanceThai"
             if " - " in title_full:
                 title, publisher = title_full.rsplit(" - ", 1)
             else:
@@ -224,33 +201,24 @@ def fetch_thai_stock_news(symbol: str, limit: int = 5) -> list:
         return []
         
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
-@st.cache_data(ttl=CACHE_TTL, show_spinner=False)
 def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
     """ดึงข้อมูลหุ้นไทย พร้อมเว้นระยะเวลาเพื่อป้องกัน Rate Limit จาก Yahoo Finance"""
     try:
         if not symbol.upper().endswith('.BK'):
             symbol = f"{symbol.upper().strip()}.BK"
             
-        # 💡 1. ปล่อยให้ yfinance จัดการเรื่อง Session เองตามคำแนะนำของระบบ
         stock = yf.Ticker(symbol)
         
-        # 💡 2. ดึงข้อมูลแบบเรียงลำดับ (Sequential) และเว้นระยะหายใจ
         price_history = stock.history(period='6mo', interval='1d')
         if price_history.empty:
             raise ValueError(f"ไม่มีข้อมูลราคาสำหรับ {symbol}")
             
-        time.sleep(0.5) # เว้นระยะให้เซิร์ฟเวอร์ Yahoo นิดหน่อย
-        
+        time.sleep(0.5) 
         info = stock.info
-        
-        time.sleep(0.5) # เว้นระยะอีกนิด
-        
+        time.sleep(0.5) 
         esg_data = stock.sustainability
         
-        # ส่วนข่าวภาษาไทย ให้ดึงแยกต่างหาก
         thai_news = fetch_thai_stock_news(symbol)
-        
-        # คำนวณเทคนิคอล
         technical_patterns = calculate_technical_patterns(price_history)
         
         if esg_data is None or esg_data.empty:
@@ -316,11 +284,10 @@ class InvestmentAdvisor:
         return any(k in query.lower() for k in thai_keywords)
 
     def extract_symbol(self, query: str, is_crypto: bool = False) -> str:
-        if is_crypto: return 'bitcoin' # Simplified for example
+        if is_crypto: return 'bitcoin' 
         symbols = re.findall(r'\b[A-Z]{2,6}\b', query.upper())
         return symbols[0] if symbols else 'PTT'
     
-    # ⚡ คืนค่าเป็น Prompt ออกไป แทนที่จะรอ LLM Generate เพื่อเอาไป Stream ในหน้า UI
     def prepare_analysis(self, query: str) -> Dict[str, Any]:
         is_crypto = self.is_crypto_query(query)
         is_thai = self.is_thai_stock_query(query) or not is_crypto
@@ -332,7 +299,7 @@ class InvestmentAdvisor:
             prompt = f"{CRYPTO_ADVISOR_PROMPT}\nUser Query: {query}\nData:\n{data}"
             return {'prompt': prompt, 'data': data, 'type': 'crypto'}
             
-        else: # หุ้นไทยเป็นหลัก
+        else: 
             symbol = self.extract_symbol(query, False)
             data = fetch_set_esg_news_info_cached(symbol)
             if 'error' in data: return data
@@ -355,20 +322,19 @@ class InvestmentAdvisor:
             prompt = f"{THAI_ESG_ADVISOR_PROMPT}\nคำถามของผู้ใช้: {query}\nข้อมูล: {data_str}"
             return {'prompt': prompt, 'data': data, 'type': 'thai_stock'}
 
-from datetime import datetime
-
 def create_price_chart(data: Dict, asset_type: str) -> go.Figure:
-    """สร้างกราฟแท่งราคา (Bar Chart) พร้อมระบุแหล่งข้อมูลและเวลาอัปเดต"""
+    """สร้างกราฟแท่งราคา (Bar Chart) พร้อมระบุแหล่งข้อมูลและเวลาอัปเดต (GMT+7)"""
     stats = data.get("price_stats", {})
     
-    # 1. กำหนดแหล่งข้อมูล (Data Source) ตามประเภทสินทรัพย์
     if asset_type == 'crypto':
         source = "CoinGecko API"
     else:
         source = "Yahoo Finance"
         
-    # 2. วันและเวลาที่ดึงข้อมูล (ดึงจาก data หากมี หรือใช้เวลาปัจจุบัน)
-    fetch_time = data.get("analysis_date", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    # 💡 อัปเดตเวลาเป็น GMT+7 (Bangkok)
+    from datetime import timezone, timedelta
+    tz_bkk = timezone(timedelta(hours=7))
+    fetch_time = data.get("analysis_date", datetime.now(tz_bkk).strftime("%d/%m/%Y %H:%M:%S")) # ปรับฟอร์แมตให้อ่านง่ายขึ้นเป็น วัน/เดือน/ปี
     
     fig = go.Figure(go.Bar(
         x=['Min', 'Avg', 'Current', 'Max'],
@@ -377,24 +343,20 @@ def create_price_chart(data: Dict, asset_type: str) -> go.Figure:
         marker_color=['#FF4B4B', '#4B8BFF', '#00CC96', '#FFA15A']
     ))
     
-    # 3. จัดรูปแบบ Layout โดยเพิ่ม Subtitle ลงใน Title ของกราฟ
     fig.update_layout(
         title={
-            'text': f"Price Range Analysis (1 Year)<br><sup style='color:gray; font-size:12px'>แหล่งข้อมูล: {source} | ข้อมูล ณ วันที่: {fetch_time}</sup>",
-            'x': 0.0,  # จัดชิดซ้าย (หรือเปลี่ยนเป็น 0.5 หากต้องการให้อยู่กึ่งกลาง)
+            'text': f"Price Range Analysis (1 Year)<br><sup style='color:gray; font-size:12px'>แหล่งข้อมูล: {source} | ข้อมูล ณ เวลา: {fetch_time} (เวลาไทย)</sup>",
+            'x': 0.0,  
         },
-        height=380,  # เพิ่มความสูงเล็กน้อยเพื่อเว้นที่ให้ Subtitle
-        margin=dict(l=0, r=0, t=65, b=0)  # เพิ่ม Margin ด้านบน (t) ไม่ให้ข้อความทับกราฟ
+        height=380,  
+        margin=dict(l=0, r=0, t=65, b=0)  
     )
     
     return fig
 
 def extract_and_plot_sentiment(analysis_text: str) -> Optional[go.Figure]:
-    """
-    ดึงข้อมูลเปอร์เซ็นต์ Sentiment จากข้อความของ AI และสร้างเป็นกราฟโดนัท
-    """
+    """ดึงข้อมูลเปอร์เซ็นต์ Sentiment จากข้อความของ AI และสร้างเป็นกราฟโดนัท"""
     try:
-        # ใช้ Regex ค้นหาตัวเลขที่อยู่หลังคำว่า Positive, Neutral, Negative
         pos_match = re.search(r'Positive\s*(\d+)', analysis_text, re.IGNORECASE)
         neu_match = re.search(r'Neutral\s*(\d+)', analysis_text, re.IGNORECASE)
         neg_match = re.search(r'Negative\s*(\d+)', analysis_text, re.IGNORECASE)
@@ -404,19 +366,17 @@ def extract_and_plot_sentiment(analysis_text: str) -> Optional[go.Figure]:
             neu_score = float(neu_match.group(1))
             neg_score = float(neg_match.group(1))
             
-            # ถ้าคะแนนรวมเป็น 0 ให้ข้ามการสร้างกราฟ
             if pos_score + neu_score + neg_score == 0:
                 return None
 
             labels = ['Positive (เชิงบวก)', 'Neutral (เป็นกลาง)', 'Negative (เชิงลบ)']
             values = [pos_score, neu_score, neg_score]
-            # สี: เขียวสว่าง, เหลือง/ส้ม, แดง
             colors = ['#00CC96', '#F4C145', '#FF4B4B']
 
             fig = go.Figure(data=[go.Pie(
                 labels=labels,
                 values=values,
-                hole=0.55, # เจาะรูตรงกลางให้เป็นโดนัท (55%)
+                hole=0.55, 
                 marker_colors=colors,
                 textinfo='percent',
                 textfont_size=14,
@@ -437,7 +397,6 @@ def extract_and_plot_sentiment(analysis_text: str) -> Optional[go.Figure]:
                 legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5)
             )
             
-            # ใส่ไอคอนตรงกลางโดนัท
             fig.add_annotation(
                 text="📊", 
                 x=0.5, y=0.5, 
@@ -451,7 +410,6 @@ def extract_and_plot_sentiment(analysis_text: str) -> Optional[go.Figure]:
         
     return None
 
-
 def main():
     st.set_page_config(
         page_title="Thai Capital Market ESG Advisor", 
@@ -459,20 +417,17 @@ def main():
         layout="wide"
     )
     
-    # ชื่อระบบ
     st.markdown(
         "<h1 style='text-align: center;'>⚡ Thai Capital Market ESG Stock & Crypto Advisor (Optimized)</h1>", 
         unsafe_allow_html=True
     )
     
-    # เพิ่มข้อความผู้สนับสนุนโครงการวิจัย
     st.markdown(
         "<p style='text-align: center;'><b> 💰 ได้รับทุนอุดหนุนการวิจัยและนวัตกรรมจากสำนักงานปลัดกระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม และกองทุนส่งเสริมการพัฒนาตลาดทุน 🪙</b></p>",
         unsafe_allow_html=True
     )
     
     st.markdown("---")
-    
     
     query = st.text_input("🔍 พิมพ์คำถามของคุณ:", placeholder="เช่น 'วิเคราะห์หุ้น PTT ด้านกราฟเทคนิคและ ESG' หรือ 'Bitcoin แนวโน้มเป็นไง'")
     
@@ -483,7 +438,6 @@ def main():
             
         advisor = InvestmentAdvisor(model)
         
-        # 1. ดึงข้อมูล (โหลดเร็วขึ้นด้วย Cache และ Parallel)
         with st.spinner("🔄 กำลังดึงข้อมูลจากตลาด..."):
             result = advisor.prepare_analysis(query)
             
@@ -493,13 +447,11 @@ def main():
             
         data = result['data']
         
-        # แสดงกราฟทันทีที่ดึงข้อมูลเสร็จ (ไม่ต้องรอ AI คิด)
+        # แสดงกราฟทันทีที่ดึงข้อมูลเสร็จ
         st.plotly_chart(create_price_chart(data, result['type']), use_container_width=True)
         
-# 2. ให้ AI วิเคราะห์และพิมพ์ผลลัพธ์แบบสตรีมมิ่ง (Streaming)
         st.markdown("### 🤖 ผลการวิเคราะห์จาก AI")
         
-        # ใช้ Generator เพื่อทำ Streaming UI
         def stream_response():
             is_thinking = False
             for chunk in advisor.model.stream([HumanMessage(content=result['prompt'])]):
@@ -512,45 +464,24 @@ def main():
                 if not is_thinking:
                     yield text
 
-        # 💡 บล็อก try...except ต้องอยู่ระดับเดียวกับ def stream_response()
         try:
-            # 1. พิมพ์ข้อความพร้อมกับเก็บข้อความทั้งหมดไว้ในตัวแปร full_analysis
+            # 1. พิมพ์ข้อความแบบ Streaming และเก็บข้อความทั้งหมดไว้ในตัวแปร
             full_analysis = st.write_stream(stream_response)
             
             # 2. นำข้อความที่ได้มาสกัดตัวเลขและพล็อตกราฟโดนัท
             sentiment_chart = extract_and_plot_sentiment(full_analysis)
             
-            # 3. ถ้าดึงตัวเลขสำเร็จ ให้แสดงกราฟไว้ด้านล่างข้อความ
+            # 3. แสดงกราฟโดนัทไว้ด้านล่างข้อความ
             if sentiment_chart:
                 st.markdown("---")
                 st.markdown("<h3 style='text-align: center;'>📊 สัดส่วนอารมณ์ตลาดจากข่าวสาร (Market Sentiment)</h3>", unsafe_allow_html=True)
                 
-                # จัดกราฟให้อยู่กึ่งกลางโดยใช้ columns
                 col_spacer1, col_chart, col_spacer2 = st.columns([1, 2, 1])
                 with col_chart:
                     st.plotly_chart(sentiment_chart, use_container_width=True)
                     
         except Exception as e:
-            # ดักจับ ClientError หรือ Error ที่เกิดจากโควต้าเต็ม
-            st.error("⏳ คำขอเกินขีดจำกัดของ Google AI แบบใช้ฟรี (จำกัด 5 ครั้งต่อนาที) กรุณารอประมาณ 1 นาทีแล้วลองกดวิเคราะห์ใหม่อีกครั้งครับ")
-
-
-        # 1. พิมพ์ข้อความพร้อมกับเก็บข้อความทั้งหมดไว้ในตัวแปร full_analysis
-        full_analysis = st.write_stream(stream_response)
-        
-        # 2. นำข้อความที่ได้มาสกัดตัวเลขและพล็อตกราฟโดนัท
-        sentiment_chart = extract_and_plot_sentiment(full_analysis)
-        
-        # 3. ถ้าดึงตัวเลขสำเร็จ ให้แสดงกราฟไว้ด้านล่างข้อความ
-        if sentiment_chart:
-            st.markdown("---")
-            st.markdown("<h3 style='text-align: center;'>📊 สัดส่วนอารมณ์ตลาดจากข่าวสาร (Market Sentiment)</h3>", unsafe_allow_html=True)
-            
-            # จัดกราฟให้อยู่กึ่งกลางโดยใช้ columns
-            col_spacer1, col_chart, col_spacer2 = st.columns([1, 2, 1])
-            with col_chart:
-                st.plotly_chart(sentiment_chart, use_container_width=True)
-
+            st.error(f"⏳ เกิดข้อผิดพลาดในการประมวลผลของ AI: {e}")
 
 if __name__ == "__main__":
     main()
