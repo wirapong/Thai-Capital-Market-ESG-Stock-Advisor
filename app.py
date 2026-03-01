@@ -33,18 +33,10 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 # Configuration สำหรับ Gemini
 MODEL_CONFIG = {
-    "model": "gemini-1.5-pro", # แนะนำ 1.5-pro สำหรับความฉลาดสูงสุด (หรือใช้ gemini-1.5-flash หากต้องการความเร็ว)
+    "model": "gemini-1.5-flash", # แนะนำ 1.5-pro สำหรับความฉลาดสูงสุด (หรือใช้ gemini-1.5-flash หากต้องการความเร็ว)
     "temperature": 0.1,
 }
 
-@st.cache_resource
-
-# Configuration สำหรับ Gemini
-MODEL_CONFIG = {
-    # 💡 เปลี่ยนเป็นรุ่น flash ซึ่งเป็นรุ่นฟรีที่เร็วและเสถียรที่สุดของ Google ตอนนี้
-    "model": "gemini-1.5-flash", 
-    "temperature": 0.1,
-}
 
 CACHE_TTL = 300  # 5 minutes cache
 
