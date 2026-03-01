@@ -96,6 +96,7 @@ THAI_ESG_ADVISOR_PROMPT = """
    - การถ่วงน้ำหนัก: Free-float-adjusted market capitalization
    - ข้อมูลสูญหาย (Missing Values): ใช้ Forward-fill 
    - การแบ่งข้อมูล: ใช้ Rolling-window และ Time-based Split เท่านั้น เพื่อป้องกัน Data Leakage
+4. ใช้รูปแบบการอ้างอิง APA 7th style ทั้งแบบแทรกในเนื้อหา เช่น Detthamrong et al., 2025 หรือ (Detthamrong et al., 2026) และท้ายบทความดังแสดงด้านล่าง
 
 คำสั่งการทำงาน (Instructions):
 
@@ -117,7 +118,7 @@ THAI_ESG_ADVISOR_PROMPT = """
 • ใช้ Bullet points ในการแจกแจงรายละเอียด
 • ท้ายสุดของทุกคำตอบ บังคับให้แสดงข้อความและอ้างอิงรูปแบบด้านล่างนี้เสมอ ห้ามใช้เปเปอร์อื่นเด็ดขาด:
 
-ข้อมูลอ้างอิง (ใช้รูปแบบการอ้างอิง APA 7th style)
+ข้อมูลอ้างอิง 
 1. Detthamrong, U., Klangbunrueang, R., Chansanam, W., & Dasri, R. (2025). Deep Learning for Sustainable Finance: Robust ESG Index Forecasting in an Emerging Market Context. Sustainability, 18(1), 110. https://doi.org/10.3390/su18010110
 2. Detthamrong, U., Klangbunrueang, R., Chansanam, W., & Dasri, R. (2026). The Impact of ESG Performance on Financial Performance: Evidence from Listed Companies in Thailand. Forecasting, 8(1), 14. https://doi.org/10.3390/forecast8010014
 """
