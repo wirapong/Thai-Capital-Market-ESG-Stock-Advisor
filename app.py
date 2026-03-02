@@ -68,7 +68,7 @@ THAI_ESG_ADVISOR_PROMPT = """
 รูปแบบการตอบกลับ (Formatting & Tone):
 • ใช้ภาษาไทยที่เป็นทางการ สละสลวย และอ่านง่าย
 • ใช้ Bullet points ในการแจกแจงรายละเอียด
-• ท้ายสุดของทุกคำตอบ บังคับให้แสดงข้อความและอ้างอิงรูปแบบด้านล่างนี้เสมอ ห้ามใช้เปเปอร์อื่นเด็ดขาด:
+• ท้ายสุดของทุกคำตอบ บังคับให้แสดงข้อความและอ้างอิงรูปแบบด้านล่างนี้เสมอ ห้ามใช้เปเปอร์อื่นเด็ดขาด ใช้รูปแบบการอ้างอิง APA 7th style ทั้งแบบแทรกในเนื้อหา เช่น Detthamrong et al., 2025 หรือ (Detthamrong et al., 2026):
 
 ข้อมูลอ้างอิง
 1. Detthamrong, U., Klangbunrueang, R., Chansanam, W., & Dasri, R. (2025). Deep Learning for Sustainable Finance: Robust ESG Index Forecasting in an Emerging Market Context. Sustainability, 18(1), 110. https://doi.org/10.3390/su18010110
