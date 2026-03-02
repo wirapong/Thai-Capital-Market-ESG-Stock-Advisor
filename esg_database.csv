@@ -1,315 +1,609 @@
-﻿symbol,esg_rating,cg_score
-AAV,AAA,4
-ACE,AAA,4
-ADB,AA,3
-ADVANC,AAA,4
-AEONTS,A,2
-AGE,,
-AH,,
-AJ,AAA,4
-AKP,AA,3
-AKR,BBB,1
-ALLA,A,2
-ALT,A,2
-ALUCON,A,2
-AMATA,AAA,4
-AMATAV,AAA,4
-AOT,AA,3
-AP,AA,3
-ARROW,,
-ASIAN,,
-ASIMAR,BBB,1
-ASK,AA,3
-ASP,AA,3
-ASW,AAA,4
-AURA,AA,3
-AWC,AAA,4
-BA,A,2
-BAFS,,
-BAM,AAA,4
-BANPU,AAA,4
-BAY,AAA,4
-BBGI,AAA,4
-BBL,AAA,4
-BCH,AA,3
-BCP,,
-BCPG,,
-BDMS,AAA,4
-BEM,AAA,4
-BGC,AAA,4
-BGRIM,AAA,4
-BH,A,2
-BJC,AAA,4
-BKIH,AAA,4
-BLA,AA,3
-BLC,A,2
-BPP,AAA,4
-BRI,AA,3
-BRR,,
-BTG,AAA,4
-BTS,AA,3
-BWG,,
-CBG,AA,3
-CENTEL,AAA,4
-CFRESH,A,2
-CHAO,A,2
-CHASE,A,2
-CHG,A,2
-CHO,,
-CIVIL,AA,3
-CK,AA,3
-CKP,AAA,4
-CM,A,2
-CMAN,AA,3
-COLOR,AA,3
-COM7,AA,3
-COTTO,,
-CPALL,AAA,4
-CPAXT,AAA,4
-CPF,AAA,4
-CPL,A,2
-CPN,AAA,4
-CRC,AAA,4
-CREDIT,A,2
-CSC,BBB,1
-CSL,,
-DELTA,,
-DEMCO,,
-DITTO,AAA,4
-DMT,AA,3
-DRT,AA,3
-EA,,
-EASTW,AAA,4
-EGCO,AA,3
-EPG,AA,3
-ERW,A,2
-ETC,AA,3
-FPI,AAA,4
-FPT,AAA,4
-GABLE,A,2
-GCAP,,
-GFPT,AA,3
-GGC,,
-GLOBAL,AAA,4
-GPSC,AAA,4
-GULF,AA,3
-GUNKUL,AAA,4
-HANA,AAA,4
-HARN,A,2
-HENG,AAA,4
-HMPRO,AAA,4
-HTC,AA,3
-HUMAN,A,2
-ICHI,AA,3
-III,AAA,4
-ILINK,AA,3
-ILM,AAA,4
-INSET,A,2
-IRC,A,2
-IRPC,,
-IT,AA,3
-ITC,A,2
-ITEL,,
-ITTHI,AA,3
-IVL,AAA,4
-J,BBB,1
-JMART,AA,3
-JMT,A,2
-JTS,,
-KBANK,AAA,4
-KCE,AA,3
-KCG,AAA,4
-KEX,,
-KJL,AAA,4
-KKP,AAA,4
-KSL,A,2
-KTB,AAA,4
-KTC,AAA,4
-KUMWEL,AA,3
-LEO,BBB,1
-LH,AAA,4
-LHFG,AA,3
-LIT,,
-LOXLEY,AAA,4
-LPN,,
-M,A,2
-MAJOR,AAA,4
-MBK,AAA,4
-MC,AAA,4
-M-CHAI,AAA,4
-MEGA,BBB,1
-MFC,,
-MFEC,AAA,4
-MGC,A,2
-MICRO,,
-MINT,AA,3
-MODERN,AA,3
-MOONG,A,2
-MOSHI,AA,3
-MSC,AA,3
-MTC,AA,3
-MTI,AAA,4
-NDR,,
-NEO,A,2
-NER,AAA,4
-NL,BBB,1
-NOBLE,AAA,4
-NRF,,
-NVD,AA,3
-NYT,AA,3
-OR,AAA,4
-ORI,AAA,4
-OSP,AAA,4
-PEER,,
-PAP,,
-PB,AAA,4
-PCC,AA,3
-PCSGH,,
-PDJ,,
-PG,,
-PHOL,A,2
-PJW,,
-PLANB,AAA,4
-PLUS,A,2
-PM,A,2
-PPP,,
-PPS,A,2
-PQS,A,2
-PR9,AAA,4
-PRIN,BBB,1
-PRM,AA,3
-PROUD,A,2
-PRTR,A,2
-PSH,AAA,4
-PSL,AA,3
-PSP,A,2
-PT,,
-PTG,AAA,4
-PTT,AAA,4
-PTTEP,AAA,4
-PTTGC,AAA,4
-Q-CON,A,2
-QLT,A,2
-QTC,AA,3
-RATCH,AAA,4
-RBF,AA,3
-RS,,
-S,AAA,4
-S&J,AAA,4
-SA,AA,3
-SABINA,AAA,4
-SAK,A,2
-SAPPE,A,2
-SAT,AAA,4
-SAWAD,AA,3
-SC,AAA,4
-SCAP,A,2
-SCB,AAA,4
-SCC,AAA,4
-SCCC,AA,3
-SCG,AAA,4
-SCGD,AA,3
-SCGP,AAA,4
-SE,BBB,1
-SEAFCO,A,2
-SEAOIL,A,2
-SELIC,AA,3
-SENA,A,2
-SENX,A,2
-SFLEX,AA,3
-SGC,A,2
-SGP,,
-SHR,AA,3
-SICT,A,2
-SIRI,AAA,4
-SITHAI,A,2
-SJWD,AAA,4
-SKR,A,2
-SKY,AAA,4
-SMPC,AA,3
-SNC,A,2
-SNNP,AA,3
-SNP,AAA,4
-SO,BBB,1
-SPALI,AA,3
-SPC,A,2
-SPI,AA,3
-SPRC,BBB,1
-SSP,AA,3
-SSSC,A,2
-STA,AAA,4
-STECON,AAA,4
-STGT,AAA,4
-SUN,BBB,1
-SUTHA,AA,3
-SVOA,AAA,4
-SYMC,A,2
-SYNEX,AA,3
-SYNTEC,,
-TAN,A,2
-TASCO,AA,3
-TBN,A,2
-TCAP,AA,3
-TCMC,AA,3
-TEAMG,AAA,4
-TEGH,AAA,4
-TFG,,
-TFMAMA,AAA,4
-TGE,A,2
-TGH,AA,3
-THAI,,
-THANA,A,2
-THANI,AA,3
-THCOM,AAA,4
-THIP,A,2
-THREL,A,2
-TIPCO,,
-TIPH,AA,3
-TISCO,AAA,4
-TKS,AA,3
-TLI,AA,3
-TMILL,BBB,1
-TMT,AAA,4
-TNDT,,
-TNL,,
-TOA,AAA,4
-TOG,AA,3
-TOP,AAA,4
-TPA,A,2
-TPAC,AA,3
-TPBI,AAA,4
-TPCS,A,2
-TPIPL,,
-TPIPP,AA,3
-TQM,A,2
-TRU,A,2
-TRUBB,AA,3
-TRUE,,
-TSC,AA,3
-TSTH,BBB,1
-TTA,AAA,4
-TTB,AAA,4
-TTCL,,
-TTW,AAA,4
-TU,AA,3
-TVDH,,
-TVO,AAA,4
-TWPC,A,2
-UAC,AA,3
-UBE,AA,3
-UKEM,,
-UPF,A,2
-UPOIC,A,2
-VGI,,
-VIBHA,A,2
-VIH,AA,3
-VNG,AAA,4
-WACOAL,,
-WHA,AAA,4
-WHAUP,AAA,4
-WICE,AA,3
-WP,BBB,1
-WPH,A,2
-XO,AA,3
-YUASA,BBB,1
-ZEN,AA,3
+symbol,cg_score,esg_rating
+AAV,Excellent,AAA
+ABM,Excellent,
+ACE,Excellent,AAA
+ACG,Excellent,
+ADVANC,Excellent,AAA
+AE,Excellent,
+AGE,Excellent,
+AF,Excellent,
+AH,Excellent,
+AJ,Excellent,AAA
+AKP,Excellent,AA
+AIT,Excellent,
+AKR,Excellent,BBB
+ALLA,Excellent,A
+ALT,Excellent,A
+AMATA,Excellent,AAA
+AMATAV,Excellent,AAA
+AMA,Excellent,
+AOT,Excellent,AA
+AMARIN,Excellent,
+AP,Excellent,AA
+ANAN,Excellent,
+ASIMAR,Excellent,BBB
+ASK,Excellent,AA
+ASP,Excellent,AA
+ASW,Excellent,AAA
+AURA,Excellent,AA
+AWC,Excellent,AAA
+BAFS,Excellent,
+BAM,Excellent,AAA
+B,Excellent,
+BANPU,Excellent,AAA
+BAY,Excellent,AAA
+BBGI,Excellent,AAA
+BBL,Excellent,AAA
+BCH,Excellent,AA
+BCPG,Excellent,
+BDMS,Excellent,AAA
+BCP*,Excellent,
+BEM,Excellent,AAA
+BGC,Excellent,AAA
+BGRIM,Excellent,AAA
+BEC,Excellent,
+BJC,Excellent,AAA
+BEYOND,Excellent,
+BLA,Excellent,AA
+BPP,Excellent,AAA
+BKIH1,Excellent,
+BRI,Excellent,AA
+BRR,Excellent,
+BTG,Excellent,AAA
+BR,Excellent,
+BTS,Excellent,AA
+BWG,Excellent,
+CBG,Excellent,AA
+BSRC,Excellent,
+CENTEL,Excellent,AAA
+CFRESH,Excellent,A
+BTW,Excellent,
+CHASE,Excellent,A
+CIVIL,Excellent,AA
+CK,Excellent,AA
+CKP,Excellent,AAA
+CHEWA,Excellent,
+CHOW,Excellent,
+CIMBT,Excellent,
+COLOR,Excellent,AA
+COM7,Excellent,AA
+CPALL,Excellent,AAA
+CNT,Excellent,
+CPAXT,Excellent,AAA
+CPF,Excellent,AAA
+CPL,Excellent,A
+CPN,Excellent,AAA
+CRC,Excellent,AAA
+CREDIT,Excellent,A
+CSC,Excellent,BBB
+CPW,Excellent,
+DELTA,Excellent,
+DEMCO,Excellent,
+CRD,Excellent,
+DITTO,Excellent,AAA
+DMT,Excellent,AA
+DRT,Excellent,AA
+CV,Excellent,
+DCC,Excellent,
+EASTW,Excellent,AAA
+DDD,Excellent,
+EGCO,Excellent,AA
+EPG,Excellent,AA
+ERW,Excellent,A
+ETC,Excellent,AA
+FPI,Excellent,AAA
+DOHOME,Excellent,
+FPT,Excellent,AAA
+GABLE,Excellent,A
+DUSIT,Excellent,
+GCAP,Excellent,
+GFPT,Excellent,AA
+ECF,Excellent,
+GGC,Excellent,
+ECL,Excellent,
+GLOBAL,Excellent,AAA
+GPSC,Excellent,AAA
+GULF,Excellent,AA
+GUNKUL,Excellent,AAA
+HANA,Excellent,AAA
+ETE,Excellent,
+HARN,Excellent,A
+FLOYD,Excellent,
+HENG,Excellent,AAA
+FN,Excellent,
+HMPRO,Excellent,AAA
+HTC,Excellent,AA
+FVC,Excellent,
+ICHI,Excellent,AA
+III,Excellent,AAA
+GC,Excellent,
+ILINK,Excellent,AA
+ILM,Excellent,AAA
+GFC,Excellent,
+INSET,Excellent,A
+IRC,Excellent,A
+IRPC,Excellent,
+GLAND,Excellent,
+IT,Excellent,AA
+ITC,Excellent,A
+ITEL,Excellent,
+GRAMMY,Excellent,
+ITTHI,Excellent,AA
+IVL,Excellent,AAA
+JTS,Excellent,
+KBANK,Excellent,AAA
+HPT,Excellent,
+KCE,Excellent,AA
+KCG,Excellent,AAA
+ICC,Excellent,
+KEX,Excellent,
+KKP,Excellent,AAA
+KSL,Excellent,A
+KTB,Excellent,AAA
+IND,Excellent,
+KTC,Excellent,AAA
+INET,Excellent,
+KUMWEL,Excellent,AA
+INTUCH,Excellent,
+LH,Excellent,AAA
+IP,Excellent,
+LHFG,Excellent,AA
+LIT,Excellent,
+LOXLEY,Excellent,AAA
+LPN,Excellent,
+M,Excellent,A
+MAJOR,Excellent,AAA
+MBK,Excellent,AAA
+MC,Excellent,AAA
+JAS,Excellent,
+M-CHAI,Excellent,AAA
+K,Excellent,
+MFC,Excellent,
+MFEC,Excellent,AAA
+KCC,Excellent,
+MINT,Excellent,AA
+MODERN,Excellent,AA
+MOONG,Excellent,A
+MOSHI,Excellent,AA
+MSC,Excellent,AA
+MTC,Excellent,AA
+KTMS,Excellent,
+MTI,Excellent,AAA
+LALIN,Excellent,
+LANNA,Excellent,
+NER,Excellent,AAA
+NOBLE,Excellent,AAA
+NVD,Excellent,AA
+NYT,Excellent,AA
+LRH,Excellent,
+OR,Excellent,AAA
+LST,Excellent,
+ORI,Excellent,AAA
+OSP,Excellent,AAA
+PEER,Excellent,
+MALEE,Excellent,
+PAP,Excellent,
+PB,Excellent,AAA
+PCC,Excellent,AA
+PCSGH,Excellent,
+MCOT,Excellent,
+PDJ,Excellent,
+PG,Excellent,
+PHOL,Excellent,A
+PLANB,Excellent,AAA
+MONO,Excellent,
+PLUS,Excellent,A
+PM,Excellent,A
+PPP,Excellent,
+PPS,Excellent,A
+MST,Excellent,
+PR9,Excellent,AAA
+MVP,Excellent,
+PRM,Excellent,AA
+NCH,Excellent,
+PRTR,Excellent,A
+NKI,Excellent,
+PSH,Excellent,AAA
+PSL,Excellent,AA
+NRF*,Excellent,
+NSL,Excellent,
+NTSC,Excellent,
+PTT,Excellent,AAA
+NWR,Excellent,
+PTTEP,Excellent,AAA
+PTTGC,Excellent,AAA
+OCC,Excellent,
+Q-CON,Excellent,A
+QTC,Excellent,AA
+RATCH,Excellent,AAA
+RBF,Excellent,AA
+RS,Excellent,
+S,Excellent,AAA
+S&J,Excellent,AAA
+SA,Excellent,AA
+SABINA,Excellent,AAA
+SAK,Excellent,A
+PIMO,Excellent,
+SAT,Excellent,AAA
+SAWAD,Excellent,AA
+PLAT,Excellent,
+SC,Excellent,AAA
+SCAP,Excellent,A
+SCB,Excellent,AAA
+PORT,Excellent,
+SCC,Excellent,AAA
+SCCC,Excellent,AA
+SCG,Excellent,AAA
+SCGD,Excellent,AA
+PRG,Excellent,
+SCGP,Excellent,AAA
+PRIME,Excellent,
+SEAFCO,Excellent,A
+SEAOIL,Excellent,A
+SELIC,Excellent,AA
+SENA,Excellent,A
+SENX,Excellent,A
+SGC,Excellent,A
+SGP,Excellent,
+QH,Excellent,
+SHR,Excellent,AA
+SICT,Excellent,A
+SIRI,Excellent,AAA
+SITHAI,Excellent,A
+RPC,Excellent,
+SJWD,Excellent,AAA
+RPH,Excellent,
+SKR,Excellent,A
+RT,Excellent,
+SMPC,Excellent,AA
+RWI,Excellent,
+SNC,Excellent,A
+SNNP,Excellent,AA
+SNP,Excellent,AAA
+SO,Excellent,BBB
+SAAM,Excellent,
+SPALI,Excellent,AA
+SPC,Excellent,A
+SPI,Excellent,AA
+SAMART,Excellent,
+SPRC,Excellent,BBB
+SAMTEL,Excellent,
+SSP,Excellent,AA
+SSSC,Excellent,A
+SAV,Excellent,
+STA,Excellent,AAA
+STGT,Excellent,AAA
+SUN,Excellent,BBB
+SUTHA,Excellent,AA
+SYMC,Excellent,A
+SYNEX,Excellent,AA
+SYNTEC,Excellent,
+SCM,Excellent,
+TASCO,Excellent,AA
+SCN,Excellent,
+TBN,Excellent,A
+SDC,Excellent,
+TCAP,Excellent,AA
+TCMC,Excellent,AA
+TEAMG,Excellent,AAA
+TEGH,Excellent,AAA
+TFG,Excellent,
+TFMAMA,Excellent,AAA
+TGE,Excellent,A
+SGF,Excellent,
+TGH,Excellent,AA
+THANA,Excellent,A
+THANI,Excellent,AA
+THCOM,Excellent,AAA
+SIS,Excellent,
+THIP,Excellent,A
+THREL,Excellent,A
+SKE,Excellent,
+TIPH,Excellent,AA
+TISCO,Excellent,AAA
+SM,Excellent,
+TKS,Excellent,AA
+SONIC,Excellent,
+SR,Excellent,
+SSC,Excellent,
+SSF,Excellent,
+STECON2,Excellent,
+STI,Excellent,
+SUC,Excellent,
+SVI,Excellent,
+THG*,Excellent,
+THRE,Excellent,
+TK,Excellent,
+TKT,Excellent,
+TLI,Excellent,AA
+TM,Excellent,
+TMILL,Excellent,BBB
+TMT,Excellent,AAA
+TNDT,Excellent,
+TNITY,Excellent,
+TNL,Excellent,
+TOA,Excellent,AAA
+TOG,Excellent,AA
+TOP,Excellent,AAA
+TPAC,Excellent,AA
+TPBI,Excellent,AAA
+TPIPL,Excellent,
+TPIPP,Excellent,AA
+TPS,Excellent,
+TQM,Excellent,A
+TQR,Excellent,
+TRP,Excellent,
+TRUBB,Excellent,AA
+true,Excellent,
+TRV,Excellent,
+TSC,Excellent,AA
+TSTE,Excellent,
+TSTH,Excellent,BBB
+TTA,Excellent,AAA
+TTB,Excellent,AAA
+TTCL,Excellent,
+TTW,Excellent,AAA
+TU,Excellent,AA
+TVDH,Excellent,
+TVO,Excellent,AAA
+TVT,Excellent,
+TWPC,Excellent,A
+UAC,Excellent,AA
+UBE,Excellent,AA
+UBIS,Excellent,
+UKEM,Excellent,
+UPF,Excellent,A
+UPOIC,Excellent,A
+UV,Excellent,
+VARO,Excellent,
+VGI,Excellent,
+VIH,Excellent,AA
+WACOAL,Excellent,
+WGE,Excellent,
+WHA,Excellent,AAA
+WHAUP,Excellent,AAA
+WICE,Excellent,AA
+WINMED,Excellent,
+WINNER,Excellent,
+ZEN,Excellent,AA
+2S,Very Good,
+AAI,Very Good,
+ADB,Very Good,AA
+AEONTS,Very Good,A
+AHC,Very Good,
+AIRA,Very Good,
+APCO,Very Good,
+APCS,Very Good,
+APURE,Very Good,
+ARIP,Very Good,
+ARROW,Very Good,
+ASIAN,Very Good,
+ATP30,Very Good,
+AUCT,Very Good,
+AYUD,Very Good,
+BA,Very Good,A
+BBIK,Very Good,
+BC,Very Good,
+BE8,Very Good,
+BH,Very Good,A
+BIZ,Very Good,
+BOL,Very Good,
+BSBM,Very Good,
+BTC,Very Good,
+CH,Very Good,
+CI,Very Good,
+CIG,Very Good,
+CM,Very Good,A
+COCOCO,Very Good,
+COMAN*,Very Good,
+CPI,Very Good,
+CSS,Very Good,
+DTCENT,Very Good,
+EVER,Very Good,
+FE,Very Good,
+FORTH,Very Good,
+FSMART,Very Good,
+FSX,Very Good,
+FTI,Very Good,
+GEL,Very Good,
+GIFT,Very Good,
+GPI,Very Good,
+HUMAN,Very Good,A
+IFS,Very Good,
+INSURE,Very Good,
+JCK,Very Good,
+JDF,Very Good,
+JMART,Very Good,AA
+KGI,Very Good,
+KJL,Very Good,AAA
+KTIS,Very Good,
+KUN,Very Good,
+L&E,Very Good,
+LHK,Very Good,
+MATCH,Very Good,
+MBAX,Very Good,
+MEGA,Very Good,BBB
+METCO,Very Good,
+MICRO,Very Good,
+NC,Very Good,
+NCAP,Very Good,
+NCL,Very Good,
+NDR,Very Good,
+ONEE,Very Good,
+PATO,Very Good,
+PDG,Very Good,
+PJW,Very Good,
+POLY,Very Good,
+PQS,Very Good,A
+PREB,Very Good,
+PROUD,Very Good,A
+PSG,Very Good,
+PSP,Very Good,A
+PSTC,Very Good,
+PT,Very Good,
+PTECH,Very Good,
+PYLON,Very Good,
+QLT,Very Good,A
+RABBIT,Very Good,
+RCL,Very Good,
+SAPPE,Very Good,A
+SECURE,Very Good,
+SFLEX,Very Good,AA
+SFT,Very Good,
+SINO,Very Good,
+SMT,Very Good,
+SPCG,Very Good,
+SPVI,Very Good,
+STANLY,Very Good,
+STPI,Very Good,
+SUPER,Very Good,
+SUSCO,Very Good,
+SVOA,Very Good,AAA
+SVT,Very Good,
+TACC,Very Good,
+TAE,Very Good,
+TCC,Very Good,
+TEKA,Very Good,
+TFM,Very Good,
+TITLE,Very Good,
+TKN,Very Good,
+TMD,Very Good,
+TNR,Very Good,
+TPA,Very Good,A
+TPCH,Very Good,
+TPCS,Very Good,A
+TPLAS,Very Good,
+TPOLY,Very Good,
+TRT,Very Good,
+TURTLE,Very Good,
+TVH,Very Good,
+UBA,Very Good,
+UP,Very Good,
+UREKA,Very Good,
+VCOM,Very Good,
+VIBHA,Very Good,A
+VRANDA,Very Good,
+WARRIX,Very Good,
+WIN,Very Good,
+WP,Very Good,BBB
+A5,Good,
+ADD,Good,
+AIE,Good,
+ALUCON,Good,A
+AMC,Good,
+AMR,Good,
+ARIN,Good,
+ASEFA,Good,
+ASIA,Good,
+ASN,Good,
+BIG,Good,
+BIOTEC,Good,
+BIS,Good,
+BJCHI,Good,
+BLC,Good,A
+BVG,Good,
+CEN,Good,
+CGH,Good,
+CHARAN,Good,
+CHAYO,Good,
+CHIC,Good,
+CHOTI,Good,
+CITY,Good,
+CMC,Good,
+CPANEL,Good,
+CSP,Good,
+DEXON,Good,
+DOD,Good,
+DPAINT,Good,
+DV8,Good,
+EASON,Good,
+EE,Good,
+EFORL,Good,
+EKH,Good,
+ESTAR,Good,
+ETL,Good,
+FNS,Good,
+GBX,Good,
+GENCO,Good,
+GTB,Good,
+GYT,Good,
+ICN,Good,
+IIG,Good,
+IMH,Good,
+IRCP,Good,
+J,Good,BBB
+JCKH,Good,
+JMT,Good,A
+JPARK,Good,
+JR,Good,
+JSP,Good,
+JUBILE,Good,
+KBS,Good,
+KCAR,Good,
+KIAT,Good,
+KISS,Good,
+KK,Good,
+KWC,Good,
+LDC,Good,
+LEO,Good,BBB
+MCA,Good,
+META,Good,
+MGC,Good,A
+MITSIB,Good,
+MK,Good,
+NAM,Good,
+NOVA,Good,
+NTV,Good,
+NV,Good,
+OGC,Good,
+PACO,Good,
+PANEL,Good,
+PHG,Good,
+PIN,Good,
+PRAPAT,Good,
+PRI,Good,
+PRIN,Good,BBB
+PROEN,Good,
+PROS,Good,
+PTC,Good,
+READY,Good,
+ROCTEC,Good,
+SABUY,Good,
+SALEE,Good,
+SAMCO,Good,
+SANKO,Good,
+SCI,Good,
+SE,Good,BBB
+SE-ED,Good,
+SINGER,Good,
+SISB,Good,
+SKN,Good,
+SKY,Good,AAA
+SMD,Good,
+SMIT,Good,
+SORKON,Good,
+SPG,Good,
+SST,Good,
+STC,Good,
+STOWER,Good,
+STP,Good,
+SVR,Good,
+SWC,Good,
+TAKUNI,Good,
+TC,Good,
+TFI,Good,
+TMC,Good,
+TMI,Good,
+TNP,Good,
+TOPP,Good,
+TRU,Good,A
+UEC,Good,
+UOBKH,Good,
+VL,Good,
+WAVE,Good,
+WFX,Good,
+WIIK,Good,
+XO,Good,AA
+XPG,Good,
+YUASA,Good,BBB
+ZAA,Good,
