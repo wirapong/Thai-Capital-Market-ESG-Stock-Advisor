@@ -297,7 +297,7 @@ def main():
     # --- Sidebar: แสดงสถานะฐานข้อมูล ---
     with st.sidebar:
         st.markdown("### 📊 ฐานข้อมูล ESG (Local)")
-        st.write("ระบบดึงข้อมูลจากไฟล์ CSV อัตโนมัติเพื่อความรวดเร็วและป้องกันการบล็อก")
+        st.write("ระบบฐานข้อมูล SET ESG จาก https://www.set.or.th/")
         
         if os.path.exists(ESG_DB_FILE):
             try:
