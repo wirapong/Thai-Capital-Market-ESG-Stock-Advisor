@@ -2,7 +2,7 @@ import re
 import os
 import time
 import logging
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from typing import Dict, Any, Optional
 
 import pandas as pd
@@ -17,100 +17,19 @@ import urllib.parse
 import xml.etree.ElementTree as ET
 import requests
 
-# Configure logging
+# ==========================================
+# ⚙️ ตั้งค่าระบบ (Configuration)
+# ==========================================
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-CACHE_TTL = 300  # 5 minutes cache
-ESG_DB_FILE = "esg_database.csv" # 💡 ไฟล์ฐานข้อมูล ESG ภายในแอป
+CACHE_TTL = 300  # แคชข้อมูล 5 นาที
+ESG_DB_FILE = "esg_database.csv" # ชื่อไฟล์ฐานข้อมูล ESG ของเรา
 
-# Configuration สำหรับ Gemini
 MODEL_CONFIG = {
     "model": "gemini-2.5-flash", 
     "temperature": 0.1,
 }
-
-# ==========================================
-# ⚙️ ส่วนที่ 1: ระบบจัดการฐานข้อมูล ESG (Data Pipeline)
-# ==========================================
-
-def get_set_esg_rating(symbol: str) -> dict:
-    """ดึงข้อมูลคะแนน ESG และ CG Score จาก SET API (ใช้สำหรับสร้างฐานข้อมูล)"""
-    clean_symbol = symbol.upper().replace('.BK', '').strip()
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "application/json",
-        "Referer": f"https://www.set.or.th/th/market/product/stock/quote/{clean_symbol}/factsheet"
-    }
-    url = f"https://www.set.or.th/api/set/stock/{clean_symbol}/esg"
-    
-    try:
-        resp = requests.get(url, headers=headers, timeout=5)
-        if resp.status_code == 200:
-            data = resp.json()
-            return {
-                "symbol": clean_symbol, 
-                "esg_rating": data.get('esgRating', 'ไม่มีประเมิน'), 
-                "cg_score": data.get('cgScore', 'N/A')
-            }
-    except Exception:
-        pass
-    
-    return {"symbol": clean_symbol, "esg_rating": "N/A", "cg_score": "N/A"}
-
-def update_esg_database(symbols_list: list):
-    """ฟังก์ชันกวาดข้อมูลและบันทึกลงไฟล์ DataFrame (CSV) พร้อมระบบ Forward-fill"""
-    progress_text = "🔄 กำลังอัปเดตฐานข้อมูล ESG จาก SET..."
-    my_bar = st.progress(0, text=progress_text)
-    
-    results = []
-    total = len(symbols_list)
-    
-    for i, sym in enumerate(symbols_list):
-        data = get_set_esg_rating(sym)
-        results.append(data)
-        time.sleep(0.8) # 💡 หน่วงเวลา 0.8 วินาทีเพื่อป้องกันระบบ SET บล็อก IP
-        my_bar.progress((i + 1) / total, text=f"{progress_text} ({i+1}/{total}) - {sym}")
-        
-    df = pd.DataFrame(results)
-    
-    # หลักการ Data Pipeline: จัดการ Missing Values ด้วยวิธีอ้างอิงข้อมูลล่าสุด (หากทำ Time-series) 
-    # ในกรณี Cross-sectional เราจะคงค่า N/A ไว้เพื่อให้โมเดลทราบว่าไม่มีข้อมูล
-    df.fillna("N/A", inplace=True) 
-    
-    df.to_csv(ESG_DB_FILE, index=False)
-    my_bar.empty()
-    st.success(f"✅ อัปเดตฐานข้อมูล ESG สำเร็จแล้ว! ({total} บริษัท) ข้อมูลพร้อมใช้งานสำหรับโมเดลวิเคราะห์")
-    return df
-
-def load_esg_data(symbol: str) -> dict:
-    """อ่านข้อมูล ESG จากไฟล์ DataFrame ท้องถิ่น"""
-    clean_symbol = symbol.upper().replace('.BK', '').strip()
-    if os.path.exists(ESG_DB_FILE):
-        df = pd.read_csv(ESG_DB_FILE)
-        match = df[df['symbol'] == clean_symbol]
-        if not match.empty:
-            return match.iloc[0].to_dict()
-    return {"esg_rating": "ไม่มีในฐานข้อมูล (โปรดกดอัปเดต)", "cg_score": "N/A"}
-
-# ==========================================
-# 🤖 ส่วนที่ 2: ระบบ AI และโมเดล
-# ==========================================
-
-@st.cache_resource
-def get_model():
-    try:
-        api_key = st.secrets.get("GOOGLE_API_KEY")
-        if not api_key:
-            st.warning("⚠️ ไม่พบ GOOGLE_API_KEY กรุณาไปตั้งค่าใน Advanced Settings > Secrets")
-            return None
-        os.environ["GOOGLE_API_KEY"] = api_key
-        return ChatGoogleGenerativeAI(model=MODEL_CONFIG["model"], temperature=MODEL_CONFIG["temperature"])
-    except Exception as e:
-        st.error(f"Failed to initialize Gemini model: {e}")
-        return None
-
-model = get_model()
 
 THAI_ESG_ADVISOR_PROMPT = """
 คุณคือ "ผู้เชี่ยวชาญด้าน Data Science, เศรษฐมิติ (Econometrics) และนักวิเคราะห์เชิงปริมาณ (Quant Analyst)" เชี่ยวชาญพิเศษด้านตลาดหลักทรัพย์แห่งประเทศไทย (SET) การวิเคราะห์เทคนิค ปัจจัยพื้นฐาน และหุ้นยั่งยืน (ESG)
@@ -156,12 +75,29 @@ THAI_ESG_ADVISOR_PROMPT = """
 2. Detthamrong, U., Klangbunrueang, R., Chansanam, W., & Dasri, R. (2026). The Impact of ESG Performance on Financial Performance: Evidence from Listed Companies in Thailand. Forecasting, 8(1), 14. https://doi.org/10.3390/forecast8010014
 """
 
-def format_currency(value: float, currency: str = "USD") -> str:
-    if value >= 1e12: return f"${value/1e12:.2f}T {currency}"
-    elif value >= 1e9: return f"${value/1e9:.2f}B {currency}"
-    elif value >= 1e6: return f"${value/1e6:.2f}M {currency}"
-    elif value >= 1e3: return f"${value/1e3:.2f}K {currency}"
-    else: return f"${value:.2f} {currency}"
+# ==========================================
+# 📊 ฟังก์ชันจัดการข้อมูล (Data Pipeline)
+# ==========================================
+
+def load_esg_data(symbol: str) -> dict:
+    """อ่านข้อมูล ESG จากไฟล์ CSV ที่เราเตรียมไว้ (รวดเร็วและไม่โดนบล็อก)"""
+    clean_symbol = symbol.upper().replace('.BK', '').strip()
+    try:
+        if os.path.exists(ESG_DB_FILE):
+            df = pd.read_csv(ESG_DB_FILE)
+            # แปลงชื่อหุ้นในไฟล์เป็นตัวพิมพ์ใหญ่ทั้งหมดเพื่อป้องกันข้อผิดพลาด
+            df['symbol'] = df['symbol'].astype(str).str.upper()
+            match = df[df['symbol'] == clean_symbol]
+            
+            if not match.empty:
+                return {
+                    "esg_rating": match.iloc[0].get('esg_rating', 'N/A'),
+                    "cg_score": match.iloc[0].get('cg_score', 'N/A')
+                }
+    except Exception as e:
+        logger.error(f"Error reading ESG DB: {e}")
+        
+    return {"esg_rating": "ไม่พบข้อมูลในฐานข้อมูล", "cg_score": "N/A"}
 
 def calculate_technical_patterns(price_history: pd.DataFrame) -> Dict[str, Any]:
     if len(price_history) < 26: return {"error": "ข้อมูลย้อนหลังไม่เพียงพอ"}
@@ -214,16 +150,16 @@ def fetch_thai_stock_news(symbol: str, limit: int = 5) -> list:
             news_list.append({"title": title.strip(), "publisher": publisher.strip(), "published_at": pub_date})
         return news_list
     except Exception as e:
-        logger.warning(f"ไม่สามารถดึงข่าวภาษาไทยสำหรับ {symbol} ได้: {e}")
+        logger.warning(f"ไม่สามารถดึงข่าวสำหรับ {symbol} ได้: {e}")
         return []
         
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
 def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
-    """ดึงข้อมูลผสมผสาน: ราคา (Yahoo) + ESG (จาก Local Database ของเรา)"""
     try:
         if not symbol.upper().endswith('.BK'):
             symbol = f"{symbol.upper().strip()}.BK"
             
+        # 1. ดึงราคาจาก Yahoo
         stock = yf.Ticker(symbol)
         price_history = stock.history(period='6mo', interval='1d')
         if price_history.empty:
@@ -234,7 +170,7 @@ def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
         thai_news = fetch_thai_stock_news(symbol)
         technical_patterns = calculate_technical_patterns(price_history)
         
-        # 💡 บูรณาการดึงข้อมูล ESG จากฐานข้อมูลที่เราสกัดมาจาก SET 
+        # 2. ดึง ESG จากไฟล์ CSV Local
         clean_symbol = symbol.replace('.BK', '')
         esg_local_data = load_esg_data(clean_symbol)
 
@@ -245,7 +181,7 @@ def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
             "volume": info.get('volume', price_history['Volume'].iloc[-1] if not price_history.empty else 0),
             "technical_analysis": technical_patterns,
             "recent_news": thai_news,
-            "esg_metrics": esg_local_data, # ยัดข้อมูล ESG ชุดใหม่เข้าไปให้ AI
+            "esg_metrics": esg_local_data, 
             "price_stats": {
                 "current_price": round(price_history['Close'].iloc[-1], 2),
                 "min_price_last_year": round(price_history['Close'].min(), 2),
@@ -257,14 +193,27 @@ def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
         logger.error(f"Error in fetch_set_esg: {e}")
         return {"error": f"Unable to fetch SET data for {symbol}. Error: {e}"}
 
+# ==========================================
+# 🤖 ระบบ AI และโมเดล
+# ==========================================
+
+@st.cache_resource
+def get_model():
+    try:
+        api_key = st.secrets.get("GOOGLE_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+        if not api_key:
+            st.warning("⚠️ ไม่พบ GOOGLE_API_KEY กรุณาไปตั้งค่าใน Advanced Settings > Secrets")
+            return None
+        os.environ["GOOGLE_API_KEY"] = api_key
+        return ChatGoogleGenerativeAI(model=MODEL_CONFIG["model"], temperature=MODEL_CONFIG["temperature"])
+    except Exception as e:
+        st.error(f"Failed to initialize Gemini model: {e}")
+        return None
+
 class InvestmentAdvisor:
     def __init__(self, model):
         self.model = model
         
-    def is_thai_stock_query(self, query: str) -> bool:
-        thai_keywords = ['set', 'หุ้นไทย', 'esg', 'ข่าว', 'ptt', 'aot', 'cpall', 'scb', 'kbank', 'advanc', 'หุ้น']
-        return any(k in query.lower() for k in thai_keywords)
-
     def extract_symbol(self, query: str) -> str:
         symbols = re.findall(r'\b[A-Z]{2,6}\b', query.upper())
         return symbols[0] if symbols else 'PTT'
@@ -283,9 +232,9 @@ class InvestmentAdvisor:
         - แนวโน้ม MACD: {data['technical_analysis'].get('MACD_Trend')}
         - Bollinger Bands: {data['technical_analysis'].get('BB_Status')}
         
-        ข้อมูลความยั่งยืน (SET ESG Ratings):
+        ข้อมูลความยั่งยืน (Local ESG Database):
         - เรตติ้ง ESG: {data['esg_metrics'].get('esg_rating')}
-        - คะแนน CG (บรรษัทภิบาล): {data['esg_metrics'].get('cg_score')}
+        - คะแนน CG: {data['esg_metrics'].get('cg_score')}
         
         ข่าวสารล่าสุด:
         {[news['title'] for news in data['recent_news']]}
@@ -293,11 +242,14 @@ class InvestmentAdvisor:
         prompt = f"{THAI_ESG_ADVISOR_PROMPT}\nคำถามของผู้ใช้: {query}\nข้อมูลที่ดึงได้จาก Pipeline:\n{data_str}"
         return {'prompt': prompt, 'data': data, 'type': 'thai_stock'}
 
+# ==========================================
+# 📈 ฟังก์ชันวาดกราฟ (UI Components)
+# ==========================================
+
 def create_price_chart(data: Dict, asset_type: str) -> go.Figure:
     stats = data.get("price_stats", {})
-    source = "Yahoo Finance & SET ESG API"
+    source = "Yahoo Finance & Local ESG DB"
         
-    from datetime import timezone, timedelta
     tz_bkk = timezone(timedelta(hours=7))
     fetch_time = data.get("analysis_date", datetime.now(tz_bkk).strftime("%d/%m/%Y %H:%M:%S"))
     
@@ -309,12 +261,8 @@ def create_price_chart(data: Dict, asset_type: str) -> go.Figure:
     ))
     
     fig.update_layout(
-        title={
-            'text': f"Price Range Analysis (1 Year)<br><sup style='color:gray; font-size:12px'>แหล่งข้อมูล: {source} | ข้อมูล ณ เวลา: {fetch_time} (เวลาไทย)</sup>",
-            'x': 0.0,  
-        },
-        height=380,  
-        margin=dict(l=0, r=0, t=65, b=0)  
+        title={'text': f"Price Range Analysis (1 Year)<br><sup style='color:gray; font-size:12px'>แหล่งข้อมูล: {source} | ข้อมูล ณ เวลา: {fetch_time} (เวลาไทย)</sup>", 'x': 0.0},
+        height=380, margin=dict(l=0, r=0, t=65, b=0)  
     )
     return fig
 
@@ -339,36 +287,30 @@ def extract_and_plot_sentiment(analysis_text: str) -> Optional[go.Figure]:
         logger.error(f"Error plotting sentiment chart: {e}")
     return None
 
+# ==========================================
+# 🌐 ส่วนหน้าจอหลัก (Main Streamlit App)
+# ==========================================
+
 def main():
     st.set_page_config(page_title="Thai Capital Market ESG Advisor", page_icon="💰", layout="wide")
     
-    # ==========================================
-    # 📝 แถบจัดการฐานข้อมูลด้านข้าง (Sidebar)
-    # ==========================================
+    # --- Sidebar: แสดงสถานะฐานข้อมูล ---
     with st.sidebar:
-        st.markdown("### ⚙️ ระบบจัดการฐานข้อมูล ESG")
-        st.write("ดึงข้อมูลเรตติ้ง ESG และ CG Score ล่าสุดจาก SET โดยตรงเพื่อลดปัญหาคอขวด (Latency) และใช้ทำ Panel Regression")
+        st.markdown("### 📊 ฐานข้อมูล ESG (Local)")
+        st.write("ระบบดึงข้อมูลจากไฟล์ CSV อัตโนมัติเพื่อความรวดเร็วและป้องกันการบล็อก")
         
-        # ใส่ตัวอย่างรายชื่อหุ้น (คุณสามารถเพิ่มรายชื่อได้เองในอนาคต)
-        sample_esg_stocks = ['PTT', 'AOT', 'CPALL', 'ADVANC', 'DELTA', 'BDMS', 'GULF', 'KBANK', 'SCB', 'SCC', 'BBL', 'CPN', 'OR', 'KTB', 'MINT', 'CRC', 'TOP', 'EA', 'TU', 'BGRIM']
-        
-        if st.button("🔄 อัปเดตข้อมูล ESG ล่าสุด (Batch)"):
-            update_esg_database(sample_esg_stocks)
-            st.rerun() # รีเฟรชหน้าจอเมื่อโหลดเสร็จ
-            
-        st.markdown("---")
-        st.markdown("**สถานะฐานข้อมูล:**")
         if os.path.exists(ESG_DB_FILE):
-            db_time = datetime.fromtimestamp(os.path.getmtime(ESG_DB_FILE)).strftime("%d/%m/%Y %H:%M")
-            st.success(f"อัปเดตล่าสุด: {db_time}")
-            with open(ESG_DB_FILE, "rb") as file:
-                st.download_button(label="📥 ดาวน์โหลดไฟล์ DataFrame", data=file, file_name="esg_database.csv", mime="text/csv")
+            try:
+                df = pd.read_csv(ESG_DB_FILE)
+                st.success(f"✅ โหลดฐานข้อมูลสำเร็จ ({len(df)} บริษัท)")
+                # แสดงตัวอย่างข้อมูลให้ดูนิดหน่อย
+                st.dataframe(df.head(10), use_container_width=True, hide_index=True)
+            except Exception as e:
+                st.error(f"❌ อ่านไฟล์ผิดพลาด: {e}")
         else:
-            st.warning("ยังไม่มีไฟล์ฐานข้อมูล กรุณากดปุ่มอัปเดตด้านบน")
+            st.warning("⚠️ ไม่พบไฟล์ esg_database.csv ในระบบ")
 
-    # ==========================================
-    # ส่วนหน้าเว็บหลัก (Main UI)
-    # ==========================================
+    # --- Main Content ---
     st.markdown("<h1 style='text-align: center;'>⚡ Thai Capital Market ESG Stock Advisor (Data-Driven)</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center;'><b> 💰 ได้รับทุนอุดหนุนการวิจัยและนวัตกรรมจากสำนักงานปลัดกระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม และกองทุนส่งเสริมการพัฒนาตลาดทุน 🪙</b></p>", unsafe_allow_html=True)
     st.markdown("---")
@@ -376,8 +318,8 @@ def main():
     query = st.text_input("🔍 พิมพ์คำถามของคุณ:", placeholder="เช่น 'วิเคราะห์หุ้น AOT ด้านกราฟเทคนิคและ ESG' หรือ 'ภาพรวม PTT เป็นอย่างไร'")
     
     if query:
+        model = get_model()
         if not model:
-            st.error("❌ AI Model ไม่พร้อมใช้งาน")
             return
             
         advisor = InvestmentAdvisor(model)
@@ -390,8 +332,10 @@ def main():
             return
             
         data = result['data']
+        # 1. แสดงกราฟแท่งราคาทันที
         st.plotly_chart(create_price_chart(data, result['type']), use_container_width=True)
-        st.markdown("### 🤖 บทวิเคราะห์และพยากรณ์โครงสร้างจาก AI")
+        
+        st.markdown("### 🤖 บทวิเคราะห์และพยากรณ์เชิงโครงสร้าง (AI)")
         
         def stream_response():
             is_thinking = False
@@ -406,7 +350,10 @@ def main():
                     yield text
 
         try:
+            # 2. ให้ AI พิมพ์บทวิเคราะห์ (Streaming)
             full_analysis = st.write_stream(stream_response)
+            
+            # 3. พล็อตกราฟโดนัทอารมณ์ข่าว
             sentiment_chart = extract_and_plot_sentiment(full_analysis)
             
             if sentiment_chart:
