@@ -386,14 +386,6 @@ def main():
                 
                 c3.metric("Enterprise Value (M)", f"฿ {enterprise_val/1e6:,.0f}")
                 c4.metric("Equity Value (M)", f"฿ {equity_val/1e6:,.0f}")
-
-                {
-  "component": "LlmGeneratedComponent",
-  "props": {
-    "height": "600px",
-    "prompt": "Create an interactive DCF (Discounted Cash Flow) Calculator widget.\n\n    * **Objective:** Allow users to explore how different financial assumptions (WACC, Short-term Growth, Terminal Growth) affect the intrinsic value of a company.\n    * **Data State:** Provide input sliders for Key Variables.\n        * WACC (%): Range 5-15, Default 8.5\n        * Short-term Growth (%): Range -10 to 30, Default 5.0\n        * Terminal Growth (%): Range 0-5, Default 2.0\n        * *Hidden initial values for calculation (based on AOT example above):* Current EBIT (27.15 B), Tax Rate (20%), D&A (assumed roughly equal to CapEx for simplicity, so FCF ~ EBIT*(1-t)), Shares Outstanding (14.29 B), Current Price (51.50), Net Debt (Debt - Cash = 50.25 - 19.40 = 30.85 B).\n    * **Strategy:** Form Layout on the left (controls), Results and Visualization on the right.\n    * **Inputs:**\n        * Sliders for the 3 key variables mentioned above.\n    * **Visuals/Behavior:**\n        * *Real-time Calculation:* As sliders move, instantly recalculate the 5-year projected FCF, Terminal Value, Enterprise Value, Equity Value, and the **Implied Share Price**.\n        * *Visuals:* Use a simple bar chart to show the 5-year FCF projection. \n        * *Conclusion:* Display a clear \"Undervalued\" (Green) or \"Overvalued\" (Red) badge based on whether the Implied Price is higher or lower than the Current Price ($51.50).\n        * *Styling:* Modern financial dashboard style, clean fonts, high-contrast colors."
-  }
-}
                 
                 if upside > 0:
                     st.success(f"✅ **Undervalued:** ตามสมมติฐานนี้ หุ้นมีราคาถูกกว่ามูลค่าที่แท้จริง (มี Upside {upside:.1f}%)")
