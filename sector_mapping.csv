@@ -1,9 +1,69 @@
 Symbol,Sector,Sub_Sector
-PTT,ENERG,Oil & Gas
-PTTEP,ENERG,Oil & Gas
-TOP,ENERG,Oil & Gas
-BCP,ENERG,Oil & Gas
-GULF,ENERG,Power
-BGRIM,ENERG,Power
-KBANK,BANK,Banking
-SCB,BANK,Banking
+PTT,Energy & Petrochemicals,Integrated Energy
+PTTEP,Energy & Petrochemicals,Upstream
+TOP,Energy & Petrochemicals,Refinery
+BCP,Energy & Petrochemicals,Refinery
+IRPC,Energy & Petrochemicals,Petrochemicals
+BSRC,Energy & Petrochemicals,Refinery
+SPRC,Energy & Petrochemicals,Refinery
+
+GULF,Power Generation,IPP
+BGRIM,Power Generation,SPP
+GPSC,Power Generation,SPP
+EA,Power Generation,Renewable Energy
+EGCO,Power Generation,IPP
+RATCH,Power Generation,IPP
+
+KBANK,Banking,Commercial Bank
+SCB,Banking,Commercial Bank
+BBL,Banking,Commercial Bank
+KTB,Banking,State Bank
+TTB,Banking,Commercial Bank
+TISCO,Banking,Financial Services
+
+CPALL,Commerce,Convenience Store
+CRC,Commerce,Department Store
+CPAXT,Commerce,Wholesale & Retail
+BJC,Commerce,Consumer Goods Retail
+HMPRO,Commerce,Home Improvement
+GLOBAL,Commerce,Construction Retail
+DOHOME,Commerce,Construction Retail
+ILM,Commerce,Furniture Retail
+
+ADVANC,ICT,Mobile Operator
+TRUE,ICT,Telecom Operator
+INTUCH,ICT,Holding Company
+JAS,ICT,Telecom & Broadband
+
+AOT,Transportation & Tourism,Airport
+BEM,Transportation & Tourism,Mass Transit
+BTS,Transportation & Tourism,Mass Transit
+AAV,Transportation & Tourism,Airline
+BA,Transportation & Tourism,Airline
+MINT,Transportation & Tourism,Hospitality
+CENTEL,Transportation & Tourism,Hospitality
+ERW,Transportation & Tourism,Hospitality
+SHR,Transportation & Tourism,Hospitality
+
+BDMS,Healthcare,Hospital
+BH,Healthcare,Hospital
+BCH,Healthcare,Hospital
+CHG,Healthcare,Hospital
+PR9,Healthcare,Hospital
+
+DELTA,Electronic Components,Electronics Manufacturer
+KCE,Electronic Components,PCB Manufacturer
+HANA,Electronic Components,Semiconductor
+CCET,Electronic Components,Electronics Manufacturer
+SVI,Electronic Components,EMS
+
+SCC,Construction & Property,Building Materials
+SCCC,Construction & Property,Cement
+TASCO,Construction & Property,Construction Materials
+EPG,Construction & Property,Plastic Materials
+CPN,Construction & Property,Property Developer
+WHA,Construction & Property,Industrial Estate
+AMATA,Construction & Property,Industrial Estate
+SPALI,Construction & Property,Residential Developer
+AP,Construction & Property,Residential Developer
+SIRI,Construction & Property,Residential Developer
