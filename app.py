@@ -61,6 +61,52 @@ THAI_ESG_ADVISOR_PROMPT = """
 2. Detthamrong, U., Klangbunrueang, R., Chansanam, W., & Dasri, R. (2026). The Impact of ESG Performance on Financial Performance: Evidence from Listed Companies in Thailand. Forecasting, 8(1), 14. https://doi.org/10.3390/forecast8010014
 """
 
+import pandas as pd
+import os
+
+SECTOR_MAPPING_FILE = "sector_mapping.csv"
+
+def get_peers_from_csv(target_symbol: str) -> list:
+    """
+    อ่านไฟล์ sector_mapping.csv เพื่อหาหุ้นที่อยู่ใน Sub_Sector เดียวกัน
+    """
+    clean_sym = target_symbol.replace('.BK', '').upper()
+    
+    # ถ้ายังไม่มีไฟล์ ให้ส่งค่ากลับเป็นกลุ่ม Default เพื่อไม่ให้แอปพัง
+    if not os.path.exists(SECTOR_MAPPING_FILE):
+        return [f"{clean_sym}.BK", 'PTT.BK', 'AOT.BK', 'CPALL.BK']
+        
+    try:
+        # 1. อ่านไฟล์ CSV
+        df = pd.read_csv(SECTOR_MAPPING_FILE)
+        df['Symbol'] = df['Symbol'].astype(str).str.upper()
+        
+        # 2. ค้นหา Sub_Sector ของหุ้นเป้าหมาย
+        target_info = df[df['Symbol'] == clean_sym]
+        
+        if target_info.empty:
+            # หาไม่เจอ ให้คืนค่าตัวเองตัวเดียว
+            return [f"{clean_sym}.BK"]
+            
+        target_sub_sector = target_info.iloc[0]['Sub_Sector']
+        
+        # 3. ดึงหุ้นทุกตัวที่อยู่ใน Sub_Sector เดียวกัน
+        peers_df = df[df['Sub_Sector'] == target_sub_sector]
+        
+        # แปลงเป็น List พร้อมเติม .BK สำหรับ yfinance
+        peer_list = [f"{sym}.BK" for sym in peers_df['Symbol'].tolist()]
+        
+        # จัดเรียงให้เป้าหมายอยู่เป็นตัวแรกเสมอ
+        if f"{clean_sym}.BK" in peer_list:
+            peer_list.remove(f"{clean_sym}.BK")
+        peer_list.insert(0, f"{clean_sym}.BK")
+            
+        return peer_list
+        
+    except Exception as e:
+        print(f"Error reading mapping file: {e}")
+        return [f"{clean_sym}.BK"]
+
 # ==========================================
 # 📊 ฟังก์ชันจัดการข้อมูลพื้นฐาน (Pipeline เดิม)
 # ==========================================
@@ -177,9 +223,8 @@ THAI_PEERS = {
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
 def get_comps_data(target_symbol: str) -> pd.DataFrame:
     """ดึงข้อมูลทำตาราง Comps"""
-    clean_sym = target_symbol.replace('.BK', '').upper()
-    peers = THAI_PEERS.get(clean_sym, ['PTT.BK', 'AOT.BK', 'CPALL.BK']) # Default peers
-    tickers = [f"{clean_sym}.BK"] + peers
+    # 💡 เปลี่ยนจากใช้ THAI_PEERS.get() เป็นการเรียกฟังก์ชันอ่าน CSV
+    tickers = get_peers_from_csv(target_symbol)
     
     data = []
     for t in tickers:
