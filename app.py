@@ -266,6 +266,8 @@ def main():
             st.warning("⚠️ ไม่พบไฟล์ esg_database.csv")
 
     st.markdown("<h2 style='text-align: center;'>⚡ Thai Capital Market ESG Stock Advisor</h2>", unsafe_allow_html=True)
+        # --- Main Content ---
+    st.markdown("<p style='text-align: center;'><b> 💰 ได้รับทุนอุดหนุนการวิจัยและนวัตกรรมจากสำนักงานปลัดกระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม และกองทุนส่งเสริมการพัฒนาตลาดทุน 🪙</b></p>", unsafe_allow_html=True)
     st.markdown("---")
     
     query = st.text_input("🔍 พิมพ์ชื่อหุ้นที่ต้องการวิเคราะห์ (เช่น PTT, AOT, KBANK):", placeholder="พิมพ์แค่ชื่อหุ้นภาษาอังกฤษ...")
