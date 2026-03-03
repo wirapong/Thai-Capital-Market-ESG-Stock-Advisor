@@ -136,12 +136,42 @@ def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
 
 # 1. ฐานข้อมูลคู่แข่ง (Peer Mapping)
 THAI_PEERS = {
-    'PTT': ['PTTEP.BK', 'TOP.BK', 'BCP.BK'],
-    'AOT': ['BEM.BK', 'BTS.BK'],
-    'KBANK': ['SCB.BK', 'BBL.BK', 'KTB.BK'],
-    'ADVANC': ['TRUE.BK', 'INTUCH.BK'],
+    # ⚡ กลุ่มพลังงานและปิโตรเคมี (Energy & Petrochemicals)
+    'PTT': ['PTTEP.BK', 'TOP.BK', 'BCP.BK', 'IRPC.BK', 'BSRC.BK'],
+    'PTTEP': ['PTT.BK', 'TOP.BK'], # ต้นน้ำ
+    'TOP': ['BCP.BK', 'IRPC.BK', 'SPRC.BK', 'BSRC.BK'], # โรงกลั่น
+    
+    # 🔌 กลุ่มโรงไฟฟ้า (Power Generation)
+    'GULF': ['BGRIM.BK', 'GPSC.BK', 'EA.BK', 'EGCO.BK', 'RATCH.BK'],
+    'BGRIM': ['GPSC.BK', 'GULF.BK', 'EGCO.BK'],
+    
+    # 🏦 กลุ่มธนาคารพาณิชย์ (Banking)
+    'KBANK': ['SCB.BK', 'BBL.BK', 'KTB.BK', 'TTB.BK', 'TISCO.BK'],
+    'SCB': ['KBANK.BK', 'BBL.BK', 'KTB.BK'],
+    
+    # 🛒 กลุ่มค้าปลีก (Commerce)
     'CPALL': ['CRC.BK', 'CPAXT.BK', 'BJC.BK'],
-    'DELTA': ['KCE.BK', 'HANA.BK']
+    'CRC': ['CPALL.BK', 'HMPRO.BK', 'GLOBAL.BK', 'DOHOME.BK'],
+    'HMPRO': ['GLOBAL.BK', 'DOHOME.BK', 'ILM.BK'],
+    
+    # 📱 กลุ่มสื่อสาร (ICT)
+    'ADVANC': ['TRUE.BK', 'INTUCH.BK', 'JAS.BK'],
+    'TRUE': ['ADVANC.BK', 'INTUCH.BK'],
+    
+    # ✈️ กลุ่มท่องเที่ยวและขนส่ง (Transportation & Tourism)
+    'AOT': ['BEM.BK', 'BTS.BK', 'AAV.BK', 'BA.BK'],
+    'MINT': ['CENTEL.BK', 'ERW.BK', 'SHR.BK'],
+    
+    # 🏥 กลุ่มการแพทย์ (Healthcare)
+    'BDMS': ['BH.BK', 'BCH.BK', 'CHG.BK', 'PR9.BK'],
+    'BH': ['BDMS.BK', 'BCH.BK', 'CHG.BK'],
+    
+    # 💻 กลุ่มชิ้นส่วนอิเล็กทรอนิกส์ (Electronic Components)
+    'DELTA': ['KCE.BK', 'HANA.BK', 'CCET.BK', 'SVI.BK'],
+    
+    # 🏗️ กลุ่มวัสดุก่อสร้างและอสังหาฯ (Construction & Property)
+    'SCC': ['SCCC.BK', 'TASCO.BK', 'EPG.BK'],
+    'CPN': ['WHA.BK', 'AMATA.BK', 'SPALI.BK', 'AP.BK', 'SIRI.BK']
 }
 
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
