@@ -194,7 +194,7 @@ def get_comps_data(target_symbol: str) -> pd.DataFrame:
                 "EV/EBITDA": info.get('enterpriseToEbitda', np.nan),
                 "P/E (Forward)": info.get('forwardPE', np.nan),
                 "P/BV": info.get('priceToBook', np.nan),
-                "Div Yield (%)": (info.get('dividendYield', 0) or 0) * 100
+                "Div Yield (%)": round(info.get('dividendYield', 0),2))
             })
         except: pass
     return pd.DataFrame(data)
