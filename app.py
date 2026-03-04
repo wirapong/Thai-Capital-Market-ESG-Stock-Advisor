@@ -321,7 +321,7 @@ def main():
                 st.dataframe(
                     comps_df.style.highlight_max(subset=['Div Yield (%)'], color='lightgreen')
                                   .highlight_min(subset=['P/E (Forward)', 'EV/EBITDA'], color='lightgreen')
-                                  .format({"ราคา (THB)": "{:.2f}", "Market Cap (B)": "{:.2f}", "EV/EBITDA": "{:.2f}", "P/E (Forward)": "{:.2f}"}),
+                                  .format({"ราคา (THB)": "{:.2f}", "Market Cap (B)": "{:.2f}", "EV/EBITDA": "{:.2f}", "P/E (Forward)": "{:.2f}", "Div Yield (%)": "{:.2f}"}),
                     use_container_width=True, hide_index=True
                 )
             else:
