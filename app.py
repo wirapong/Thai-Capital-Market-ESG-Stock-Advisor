@@ -498,8 +498,17 @@ def main():
     st.markdown("---")
     
     query = st.text_input("🔍 พิมพ์ชื่อหุ้นที่ต้องการวิเคราะห์ (เช่น PTT, AOT, KBANK):", placeholder="พิมพ์แค่ชื่อหุ้นภาษาอังกฤษ...")
-    
+
+     
     if query:
+        # 💡 1. ต้องบรรทัดนี้เพื่อเรียก AI Model ขึ้นมาก่อน!
+        model = get_model()
+        
+        # 💡 2. ดักจับ Error เผื่อลืมใส่ API Key
+        if not model:
+            st.error("❌ ไม่พบ API Key กรุณาตรวจสอบการตั้งค่า GOOGLE_API_KEY")
+            return
+            
         symbols = re.findall(r'\b[A-Z]{2,6}\b', query.upper())
         symbol = symbols[0] if symbols else query.strip()
         
@@ -507,8 +516,32 @@ def main():
         tab1, tab2, tab3 = st.tabs([
             "🤖 บทวิเคราะห์ ESG & AI", 
             "📈 Financial Models (DCF & Comps)",
-            "🔬 Advanced ESG Quant Models" # 💡 แท็บใหม่ที่คุณขอครับ
+            "🔬 Advanced ESG Quant Models" 
         ])
+        
+        # --------------------------------------------------
+        # แท็บ 1: ระบบ AI อัจฉริยะ 
+        # --------------------------------------------------
+        with tab1:
+            with st.spinner("🔄 กำลังดึงข้อมูลและประมวลผลด้วย AI..."):
+                data = fetch_set_esg_news_info_cached(symbol)
+                
+            if 'error' in data:
+                st.error(data['error'])
+            else:
+                prompt = f"{THAI_ESG_ADVISOR_PROMPT}\nคำถาม: วิเคราะห์ {symbol}\nข้อมูล:\n{data}"
+                
+                def stream_response():
+                    # 💡 ตอนนี้ระบบจะรู้จักตัวแปร model แล้วครับ!
+                    for chunk in model.stream([HumanMessage(content=prompt)]):
+                        text = chunk.content.replace("<think>", "").replace("</think>", "")
+                        yield text
+
+                st.markdown(f"### 🤖 บทวิเคราะห์เชิงโครงสร้าง: {symbol}")
+                full_analysis = st.write_stream(stream_response)
+                
+                chart = extract_and_plot_sentiment(full_analysis)
+                if chart: st.plotly_chart(chart, use_container_width=True)
         
         # --- แท็บ 1 & แท็บ 2 (ใช้โค้ดชุดเดิมของคุณได้เลย) ---
         with tab1:
