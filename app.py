@@ -661,6 +661,14 @@ def main():
             st.markdown("<br><br>", unsafe_allow_html=True)
             st.markdown("### 🤖 การพยากรณ์ราคาด้วย Deep Learning (Price Prediction)")
             # ... (ส่วนของโมเดล GRU ปล่อยไว้เหมือนเดิมครับ) ...
+            st.info("💡 โมเดล **GRU (Gated Recurrent Unit)** ถ่วงน้ำหนัก Free-float ใช้ทดสอบพยากรณ์ราคาจากไฟล์ `Thai_SETESG_Data_2014_2024.csv`")
+            
+            df_market = load_and_preprocess_quant_data(ESG_MARKET_FILE)
+            if df_market is not None:
+                if st.button("▶️ เทรนและพยากรณ์ด้วย GRU Model"):
+                    build_and_train_gru(df_market, symbol) # 💡 เพิ่มตัวแปร symbol ตรงนี้
+            else:
+                st.warning(f"ยังไม่ได้อัปโหลดไฟล์ {ESG_MARKET_FILE}")
 
 if __name__ == "__main__":
     main()
