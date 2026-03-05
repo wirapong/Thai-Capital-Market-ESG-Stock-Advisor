@@ -251,19 +251,19 @@ def get_yf_session():
     return session
 
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
+@st.cache_data(ttl=CACHE_TTL, show_spinner=False)
 def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
     try:
         if not symbol.upper().endswith('.BK'):
             symbol = f"{symbol.upper().strip()}.BK"
             
-        # 💡 ใช้ Session ที่เราสร้างขึ้นมาส่งเข้าไปใน yfinance
-        session = get_yf_session()
-        stock = yf.Ticker(symbol, session=session)
+        # 💡 ปล่อยให้ yfinance จัดการเอง ไม่ต้องส่ง session=session แล้ว
+        stock = yf.Ticker(symbol)
         
         hist = stock.history(period='6mo', interval='1d')
         if hist.empty: raise ValueError("ไม่มีข้อมูลราคา (หรืออาจถูกจำกัดการเข้าถึงจาก Yahoo)")
         
-        time.sleep(1) # เพิ่มการหน่วงเวลา 1 วินาที ลดความก้าวร้าวในการดึงข้อมูล
+        time.sleep(1) # คงการหน่วงเวลาไว้ช่วยลดภาระเซิร์ฟเวอร์
         
         info = stock.info
         clean_symbol = symbol.replace('.BK', '')
@@ -281,18 +281,15 @@ def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
 
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
+@st.cache_data(ttl=CACHE_TTL, show_spinner=False)
 def get_comps_data(target_symbol: str) -> pd.DataFrame:
-    """ดึงข้อมูลทำตาราง Comps พร้อมระบบ Retry ป้องกันการบล็อก"""
     tickers = get_peers_from_csv(target_symbol)
     data = []
     
-    # 💡 เรียกใช้ Session ที่ตั้งค่า Retry ไว้แล้ว
-    session = get_yf_session()
-    
     for t in tickers:
         try:
-            # 💡 ส่ง session เข้าไปใน yfinance
-            info = yf.Ticker(t, session=session).info
+            # 💡 ดึงแบบปกติเลย ไม่ต้องมี session
+            info = yf.Ticker(t).info
             
             data.append({
                 "หุ้น (Ticker)": t.replace('.BK', ''),
@@ -304,7 +301,6 @@ def get_comps_data(target_symbol: str) -> pd.DataFrame:
                 "Div Yield (%)": info.get('dividendYield', 0)
             })
             
-            # 💡 หน่วงเวลา 0.5 วินาที ก่อนดึงหุ้นคู่แข่งตัวถัดไป ป้องกันการยิง Request ถี่เกิน
             time.sleep(0.5) 
             
         except Exception as e:
@@ -315,22 +311,18 @@ def get_comps_data(target_symbol: str) -> pd.DataFrame:
 
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
+@st.cache_data(ttl=CACHE_TTL, show_spinner=False)
 def get_dcf_financials(symbol: str) -> dict:
-    """ดึงงบการเงินมาเก็บไว้ใน Cache พร้อมระบบ Retry ป้องกันการบล็อก"""
     if not symbol.endswith('.BK'): symbol = f"{symbol}.BK"
     
-    # 💡 เรียกใช้ Session
-    session = get_yf_session()
-    
-    # 💡 ส่ง session เข้าไป
-    stock = yf.Ticker(symbol, session=session)
+    # 💡 ปล่อยให้ yfinance จัดการเอง
+    stock = yf.Ticker(symbol)
     
     try:
         is_df = stock.financials
         bs_df = stock.balance_sheet
         cf_df = stock.cashflow
         
-        # 💡 หน่วงเวลาเล็กน้อยก่อนเปลี่ยนไปดึงข้อมูล info (พฤติกรรมที่ yfinance มักจะโดนบล็อก)
         time.sleep(1)
         info = stock.info
 
