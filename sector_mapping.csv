@@ -1,69 +1,609 @@
-Symbol,Sector,Sub_Sector
-PTT,Energy & Petrochemicals,Integrated Energy
-PTTEP,Energy & Petrochemicals,Upstream
-TOP,Energy & Petrochemicals,Refinery
-BCP,Energy & Petrochemicals,Refinery
-IRPC,Energy & Petrochemicals,Petrochemicals
-BSRC,Energy & Petrochemicals,Refinery
-SPRC,Energy & Petrochemicals,Refinery
-
-GULF,Power Generation,IPP
-BGRIM,Power Generation,SPP
-GPSC,Power Generation,SPP
-EA,Power Generation,Renewable Energy
-EGCO,Power Generation,IPP
-RATCH,Power Generation,IPP
-
-KBANK,Banking,Commercial Bank
-SCB,Banking,Commercial Bank
-BBL,Banking,Commercial Bank
-KTB,Banking,State Bank
-TTB,Banking,Commercial Bank
-TISCO,Banking,Financial Services
-
-CPALL,Commerce,Convenience Store
-CRC,Commerce,Department Store
-CPAXT,Commerce,Wholesale & Retail
-BJC,Commerce,Consumer Goods Retail
-HMPRO,Commerce,Home Improvement
-GLOBAL,Commerce,Construction Retail
-DOHOME,Commerce,Construction Retail
-ILM,Commerce,Furniture Retail
-
-ADVANC,ICT,Mobile Operator
-TRUE,ICT,Telecom Operator
-INTUCH,ICT,Holding Company
-JAS,ICT,Telecom & Broadband
-
-AOT,Transportation & Tourism,Airport
-BEM,Transportation & Tourism,Mass Transit
-BTS,Transportation & Tourism,Mass Transit
-AAV,Transportation & Tourism,Airline
-BA,Transportation & Tourism,Airline
-MINT,Transportation & Tourism,Hospitality
-CENTEL,Transportation & Tourism,Hospitality
-ERW,Transportation & Tourism,Hospitality
-SHR,Transportation & Tourism,Hospitality
-
-BDMS,Healthcare,Hospital
-BH,Healthcare,Hospital
-BCH,Healthcare,Hospital
-CHG,Healthcare,Hospital
-PR9,Healthcare,Hospital
-
-DELTA,Electronic Components,Electronics Manufacturer
-KCE,Electronic Components,PCB Manufacturer
-HANA,Electronic Components,Semiconductor
-CCET,Electronic Components,Electronics Manufacturer
-SVI,Electronic Components,EMS
-
-SCC,Construction & Property,Building Materials
-SCCC,Construction & Property,Cement
-TASCO,Construction & Property,Construction Materials
-EPG,Construction & Property,Plastic Materials
-CPN,Construction & Property,Property Developer
-WHA,Construction & Property,Industrial Estate
-AMATA,Construction & Property,Industrial Estate
-SPALI,Construction & Property,Residential Developer
-AP,Construction & Property,Residential Developer
-SIRI,Construction & Property,Residential Developer
+﻿Symbol,Sector,Sub_Sector
+2S,Services,Professional Services
+A5,Services,Professional Services
+AAI,Services,Transportation & Logistics
+AAV,Services,Transportation & Logistics
+ABM,Services,Professional Services
+ACE,Resources,Energy & Utilities
+ACG,Resources,Energy & Utilities
+ADB,Financials,Finance & Securities
+ADD,Technology,Information & Communication Technology
+ADVANC,Technology,Information & Communication Technology
+AE,Services,Professional Services
+AEONTS,Financials,Finance & Securities
+AF,Services,Professional Services
+AGE,Resources,Energy & Utilities
+AH,Property & Construction,Property Development
+AHC,Services,Health Care Services
+AIE,Resources,Energy & Utilities
+AIRA,Financials,Finance & Securities
+AIT,Industrials,Industrial Materials & Machine
+AJ,Agro & Food Industry,Food & Beverage
+AKP,Industrials,Packaging
+AKR,Property & Construction,Construction Materials
+ALLA,Financials,Finance & Securities
+ALT,Technology,Information & Communication Technology
+ALUCON,Industrials,Industrial Materials & Machine
+AMA,Agro & Food Industry,Agribusiness
+AMARIN,Services,Media & Publishing
+AMATA,Property & Construction,Property Development
+AMATAV,Property & Construction,Property Development
+AMC,Financials,Finance & Securities
+AMR,Services,Professional Services
+ANAN,Property & Construction,Property Development
+AOT,Services,Transportation & Logistics
+AP,Property & Construction,Property Development
+APCO,Resources,Energy & Utilities
+APCS,Property & Construction,Construction Services
+APURE,Services,Professional Services
+ARIN,Services,Professional Services
+ARIP,Services,Media & Publishing
+ARROW,Technology,Electronic Components
+ASEFA,Property & Construction,Construction Services
+ASIA,Consumer Products,Fashion
+ASIAN,Services,Professional Services
+ASIMAR,Services,Transportation & Logistics
+ASK,Financials,Finance & Securities
+ASN,Services,Professional Services
+ASP,Financials,Finance & Securities
+ASW,Property & Construction,Property Development
+ATP30,Services,Commerce
+AUCT,Services,Commerce
+AURA,Services,Media & Publishing
+AWC,Property & Construction,Property Development
+AYUD,Financials,Insurance
+B,Agro & Food Industry,Food & Beverage
+BA,Services,Transportation & Logistics
+BAFS,Services,Transportation & Logistics
+BAM,Financials,Finance & Securities
+BANPU,Resources,Energy & Utilities
+BAY,Financials,Banking
+BBGI,Resources,Energy & Utilities
+BBIK,Services,Professional Services
+BBL,Financials,Banking
+BC,Services,Commerce
+BCH,Services,Health Care Services
+BCP,Resources,Energy & Utilities
+BCPG,Resources,Energy & Utilities
+BDMS,Services,Health Care Services
+BE8,Technology,Information & Communication Technology
+BEC,Services,Media & Publishing
+BEM,Services,Transportation & Logistics
+BEYOND,Services,Media & Publishing
+BGC,Services,Professional Services
+BGRIM,Resources,Energy & Utilities
+BH,Services,Health Care Services
+BIG,Industrials,Industrial Materials & Machine
+BIOTEC,Consumer Products,Personal Products & Pharmaceuticals
+BIS,Services,Professional Services
+BIZ,Services,Commerce
+BJC,Consumer Products,Home & Office Products
+BJCHI,Industrials,Industrial Materials & Machine
+BKIH1,Services,Professional Services
+BLA,Financials,Insurance
+BLC,Services,Health Care Services
+BOL,Services,Commerce
+BPP,Resources,Energy & Utilities
+BR,Agro & Food Industry,Agribusiness
+BRI,Financials,Finance & Securities
+BRR,Agro & Food Industry,Agribusiness
+BSBM,Services,Commerce
+BSRC,Resources,Energy & Utilities
+BTC,Services,Commerce
+BTG,Agro & Food Industry,Agribusiness
+BTS,Services,Transportation & Logistics
+BTW,Resources,Energy & Utilities
+BVG,Services,Professional Services
+BWG,Resources,Energy & Utilities
+CBG,Agro & Food Industry,Food & Beverage
+CEN,Services,Professional Services
+CENTEL,Services,Tourisms & Leisure
+CFRESH,Agro & Food Industry,Food & Beverage
+CGH,Services,Health Care Services
+CH,Agro & Food Industry,Agribusiness
+CHARAN,Services,Professional Services
+CHASE,Financials,Finance & Securities
+CHAYO,Financials,Finance & Securities
+CHEWA,Property & Construction,Property Development
+CHIC,Consumer Products,Fashion
+CHOTI,Services,Professional Services
+CHOW,Industrials,Steel & Metal Products
+CI,Services,Commerce
+CIG,Services,Professional Services
+CIMBT,Financials,Banking
+CITY,Services,Health Care Services
+CIVIL,Property & Construction,Construction Services
+CK,Property & Construction,Construction Services
+CKP,Resources,Energy & Utilities
+CM,Services,Professional Services
+CMC,Property & Construction,Construction Materials
+CNT,Services,Transportation & Logistics
+COCOCO,Agro & Food Industry,Food & Beverage
+COLOR,Consumer Products,Home & Office Products
+COM7,Technology,Information & Communication Technology
+COMAN,Services,Commerce
+CPALL,Services,Commerce
+CPANEL,Property & Construction,Construction Materials
+CPAXT,Services,Commerce
+CPF,Agro & Food Industry,Agribusiness
+CPI,Property & Construction,Construction Services
+CPL,Industrials,Petrochemicals & Chemicals
+CPN,Property & Construction,Property Development
+CPW,Agro & Food Industry,Food & Beverage
+CRC,Services,Commerce
+CRD,Services,Commerce
+CREDIT,Financials,Finance & Securities
+CSC,Financials,Finance & Securities
+CSP,Industrials,Steel & Metal Products
+CSS,Technology,Information & Communication Technology
+CV,Services,Professional Services
+DCC,Industrials,Industrial Materials & Machine
+DDD,Services,Professional Services
+DELTA,Technology,Electronic Components
+DEMCO,Resources,Energy & Utilities
+DEXON,Services,Professional Services
+DITTO,Technology,Information & Communication Technology
+DMT,Services,Transportation & Logistics
+DOD,Services,Commerce
+DOHOME,Services,Commerce
+DPAINT,Consumer Products,Home & Office Products
+DRT,Property & Construction,Construction Materials
+DTCENT,Services,Commerce
+DUSIT,Services,Tourisms & Leisure
+DV8,Services,Professional Services
+EASON,Industrials,Industrial Materials & Machine
+EASTW,Resources,Energy & Utilities
+ECF,Financials,Finance & Securities
+ECL,Services,Professional Services
+EE,Services,Professional Services
+EFORL,Services,Commerce
+EGCO,Resources,Energy & Utilities
+EKH,Services,Health Care Services
+EPG,Industrials,Packaging
+ERW,Services,Tourisms & Leisure
+ESTAR,Property & Construction,Property Development
+ETC,Services,Transportation & Logistics
+ETE,Technology,Information & Communication Technology
+ETL,Services,Professional Services
+EVER,Property & Construction,Property Development
+FE,Resources,Energy & Utilities
+FLOYD,Services,Professional Services
+FN,Industrials,Packaging
+FNS,Services,Professional Services
+FORTH,Technology,Information & Communication Technology
+FPI,Industrials,Petrochemicals & Chemicals
+FPT,Resources,Energy & Utilities
+FSMART,Technology,Information & Communication Technology
+FSX,Services,Commerce
+FTI,Services,Professional Services
+FVC,Services,Professional Services
+GABLE,Technology,Information & Communication Technology
+GBX,Services,Commerce
+GC,Industrials,Petrochemicals & Chemicals
+GCAP,Financials,Finance & Securities
+GEL,Services,Commerce
+GENCO,Services,Professional Services
+GFC,Industrials,Steel & Metal Products
+GFPT,Agro & Food Industry,Food & Beverage
+GGC,Industrials,Petrochemicals & Chemicals
+GIFT,Services,Commerce
+GLAND,Property & Construction,Property Development
+GLOBAL,Services,Commerce
+GPI,Services,Commerce
+GPSC,Resources,Energy & Utilities
+GRAMMY,Services,Media & Publishing
+GTB,Services,Commerce
+GULF,Resources,Energy & Utilities
+GUNKUL,Resources,Energy & Utilities
+GYT,Services,Health Care Services
+HANA,Technology,Electronic Components
+HARN,Consumer Products,Personal Products & Pharmaceuticals
+HENG,Financials,Finance & Securities
+HMPRO,Services,Commerce
+HPT,Services,Professional Services
+HTC,Services,Health Care Services
+HUMAN,Services,Professional Services
+ICC,Consumer Products,Fashion
+ICHI,Agro & Food Industry,Food & Beverage
+ICN,Services,Professional Services
+IFS,Services,Professional Services
+IIG,Services,Professional Services
+III,Technology,Information & Communication Technology
+ILINK,Technology,Information & Communication Technology
+ILM,Services,Professional Services
+IMH,Services,Health Care Services
+IND,Industrials,Industrial Materials & Machine
+INET,Technology,Information & Communication Technology
+INSET,Technology,Information & Communication Technology
+INSURE,Financials,Insurance
+INTUCH,Technology,Information & Communication Technology
+IP,Services,Professional Services
+IRC,Agro & Food Industry,Agribusiness
+IRCP,Property & Construction,Construction Services
+IRPC,Industrials,Petrochemicals & Chemicals
+IT,Technology,Information & Communication Technology
+ITC,Property & Construction,Construction Services
+ITEL,Technology,Information & Communication Technology
+ITTHI,Services,Professional Services
+IVL,Industrials,Petrochemicals & Chemicals
+J,Financials,Finance & Securities
+JAS,Technology,Information & Communication Technology
+JCK,Services,Professional Services
+JCKH,Services,Professional Services
+JDF,Services,Professional Services
+JMART,Services,Commerce
+JMT,Financials,Finance & Securities
+JPARK,Services,Transportation & Logistics
+JR,Services,Professional Services
+JSP,Financials,Finance & Securities
+JTS,Services,Transportation & Logistics
+JUBILE,Consumer Products,Fashion
+K,Financials,Banking
+KBANK,Financials,Banking
+KBS,Services,Commerce
+KCAR,Services,Commerce
+KCC,Services,Professional Services
+KCE,Technology,Electronic Components
+KCG,Agro & Food Industry,Food & Beverage
+KEX,Services,Professional Services
+KGI,Financials,Finance & Securities
+KIAT,Services,Transportation & Logistics
+KISS,Services,Media & Publishing
+KJL,Consumer Products,Fashion
+KK,Financials,Finance & Securities
+KKP,Financials,Banking
+KSL,Agro & Food Industry,Agribusiness
+KTB,Financials,Banking
+KTC,Financials,Finance & Securities
+KTIS,Agro & Food Industry,Agribusiness
+KTMS,Financials,Finance & Securities
+KUMWEL,Services,Transportation & Logistics
+KUN,Services,Professional Services
+KWC,Services,Professional Services
+L&E,Industrials,Industrial Materials & Machine
+LALIN,Property & Construction,Property Development
+LANNA,Resources,Mining
+LDC,Services,Professional Services
+LEO,Agro & Food Industry,Food & Beverage
+LH,Property & Construction,Property Development
+LHFG,Financials,Finance & Securities
+LHK,Property & Construction,Property Development
+LIT,Services,Professional Services
+LOXLEY,Technology,Information & Communication Technology
+LPN,Property & Construction,Property Development
+LRH,Services,Health Care Services
+LST,Industrials,Steel & Metal Products
+M,Services,Professional Services
+M-CHAI,Industrials,Automotive
+MAJOR,Services,Media & Publishing
+MALEE,Agro & Food Industry,Food & Beverage
+MATCH,Services,Professional Services
+MBAX,Property & Construction,Property Fund & Real Estate Investment Trusts
+MBK,Services,Commerce
+MC,Consumer Products,Fashion
+MCA,Services,Professional Services
+MCOT,Services,Media & Publishing
+MEGA,Consumer Products,Personal Products & Pharmaceuticals
+META,Services,Professional Services
+METCO,Services,Professional Services
+MFC,Financials,Finance & Securities
+MFEC,Technology,Information & Communication Technology
+MGC,Services,Professional Services
+MICRO,Technology,Information & Communication Technology
+MINT,Services,Tourisms & Leisure
+MITSIB,Financials,Insurance
+MK,Services,Commerce
+MODERN,Consumer Products,Home & Office Products
+MONO,Services,Media & Publishing
+MOONG,Agro & Food Industry,Food & Beverage
+MOSHI,Consumer Products,Fashion
+MSC,Consumer Products,Home & Office Products
+MST,Services,Professional Services
+MTC,Financials,Finance & Securities
+MTI,Financials,Insurance
+MVP,Services,Professional Services
+NAM,Industrials,Industrial Materials & Machine
+NC,Property & Construction,Property Development
+NCAP,Financials,Finance & Securities
+NCH,Services,Health Care Services
+NCL,Services,Transportation & Logistics
+NDR,Services,Professional Services
+NER,Agro & Food Industry,Agribusiness
+NKI,Industrials,Steel & Metal Products
+NOBLE,Property & Construction,Property Development
+NOVA,Services,Professional Services
+NRF,Agro & Food Industry,Agribusiness
+NSL,Agro & Food Industry,Food & Beverage
+NTSC,Technology,Information & Communication Technology
+NTV,Consumer Products,Home & Office Products
+NV,Services,Professional Services
+NVD,Technology,Information & Communication Technology
+NWR,Property & Construction,Property Development
+NYT,Services,Commerce
+OCC,Industrials,Packaging
+OGC,Resources,Energy & Utilities
+ONEE,Services,Media & Publishing
+OR,Resources,Energy & Utilities
+ORI,Property & Construction,Property Development
+OSP,Agro & Food Industry,Food & Beverage
+PACO,Services,Professional Services
+PANEL,Property & Construction,Construction Materials
+PAP,Agro & Food Industry,Agribusiness
+PATO,Services,Commerce
+PB,Agro & Food Industry,Food & Beverage
+PCC,Industrials,Packaging
+PCSGH,Services,Health Care Services
+PDG,Property & Construction,Property Development
+PDJ,Services,Commerce
+PEER,Services,Professional Services
+PG,Services,Professional Services
+PHG,Services,Health Care Services
+PHOL,Services,Health Care Services
+PIMO,Services,Professional Services
+PIN,Services,Commerce
+PJW,Services,Professional Services
+PLANB,Services,Media & Publishing
+PLAT,Services,Professional Services
+PLUS,Services,Professional Services
+PM,Agro & Food Industry,Food & Beverage
+POLY,Industrials,Petrochemicals & Chemicals
+PORT,Services,Transportation & Logistics
+PPP,Industrials,Packaging
+PPS,Property & Construction,Property Development
+PQS,Services,Professional Services
+PR9,Services,Health Care Services
+PRAPAT,Services,Professional Services
+PREB,Property & Construction,Property Development
+PRG,Services,Professional Services
+PRI,Services,Commerce
+PRIME,Resources,Energy & Utilities
+PRIN,Services,Commerce
+PRM,Services,Transportation & Logistics
+PROEN,Services,Professional Services
+PROS,Technology,Information & Communication Technology
+PROUD,Property & Construction,Property Development
+PRTR,Services,Professional Services
+PSG,Services,Professional Services
+PSH,Property & Construction,Property Development
+PSL,Services,Transportation & Logistics
+PSP,Services,Professional Services
+PSTC,Technology,Information & Communication Technology
+PT,Services,Commerce
+PTC,Services,Professional Services
+PTECH,Technology,Electronic Components
+PTT,Resources,Energy & Utilities
+PTTEP,Resources,Energy & Utilities
+PTTGC,Industrials,Petrochemicals & Chemicals
+PYLON,Property & Construction,Construction Services
+Q-CON,Property & Construction,Construction Materials
+QH,Property & Construction,Property Development
+QLT,Services,Professional Services
+QTC,Industrials,Industrial Materials & Machine
+RABBIT,Financials,Finance & Securities
+RATCH,Resources,Energy & Utilities
+RBF,Agro & Food Industry,Food & Beverage
+RCL,Services,Transportation & Logistics
+READY,Services,Professional Services
+ROCTEC,Services,Professional Services
+RPC,Industrials,Petrochemicals & Chemicals
+RPH,Services,Health Care Services
+RS,Services,Media & Publishing
+RT,Services,Commerce
+RWI,Services,Commerce
+S,Consumer Products,Home & Office Products
+S&J,Consumer Products,Personal Products & Pharmaceuticals
+SA,Agro & Food Industry,Agribusiness
+SAAM,Services,Transportation & Logistics
+SABINA,Consumer Products,Fashion
+SABUY,Services,Professional Services
+SAK,Consumer Products,Fashion
+SALEE,Consumer Products,Home & Office Products
+SAMART,Technology,Information & Communication Technology
+SAMCO,Services,Professional Services
+SAMTEL,Technology,Electronic Components
+SANKO,Services,Commerce
+SAPPE,Agro & Food Industry,Food & Beverage
+SAT,Industrials,Automotive
+SAV,Services,Professional Services
+SAWAD,Financials,Finance & Securities
+SC,Property & Construction,Property Development
+SCAP,Financials,Finance & Securities
+SCB,Financials,Banking
+SCC,Property & Construction,Construction Materials
+SCCC,Property & Construction,Construction Materials
+SCG,Property & Construction,Construction Materials
+SCGD,Property & Construction,Construction Materials
+SCGP,Industrials,Packaging
+SCI,Services,Professional Services
+SCM,Services,Professional Services
+SCN,Services,Professional Services
+SDC,Services,Professional Services
+SE,Services,Professional Services
+SE-ED,Services,Commerce
+SEAFCO,Property & Construction,Construction Services
+SEAOIL,Resources,Energy & Utilities
+SECURE,Technology,Information & Communication Technology
+SELIC,Financials,Finance & Securities
+SENA,Property & Construction,Property Development
+SENX,Resources,Energy & Utilities
+SFLEX,Industrials,Packaging
+SFT,Services,Professional Services
+SGC,Resources,Energy & Utilities
+SGF,Services,Professional Services
+SGP,Services,Professional Services
+SHR,Services,Tourisms & Leisure
+SICT,Services,Transportation & Logistics
+SINGER,Consumer Products,Home & Office Products
+SINO,Property & Construction,Construction Services
+SIRI,Property & Construction,Property Development
+SIS,Services,Commerce
+SISB,Services,Professional Services
+SITHAI,Industrials,Automotive
+SJWD,Services,Transportation & Logistics
+SKE,Property & Construction,Construction Services
+SKN,Consumer Products,Personal Products & Pharmaceuticals
+SKR,Property & Construction,Property Development
+SKY,Services,Health Care Services
+SM,Services,Professional Services
+SMD,Services,Professional Services
+SMIT,Services,Professional Services
+SMPC,Agro & Food Industry,Agribusiness
+SMT,Industrials,Industrial Materials & Machine
+SNC,Industrials,Automotive
+SNNP,Agro & Food Industry,Food & Beverage
+SNP,Agro & Food Industry,Food & Beverage
+SO,Resources,Energy & Utilities
+SONIC,Services,Transportation & Logistics
+SORKON,Services,Commerce
+SPALI,Property & Construction,Property Development
+SPC,Resources,Energy & Utilities
+SPCG,Resources,Energy & Utilities
+SPG,Property & Construction,Property Development
+SPI,Services,Professional Services
+SPRC,Resources,Energy & Utilities
+SPVI,Technology,Information & Communication Technology
+SR,Industrials,Industrial Materials & Machine
+SSC,Services,Professional Services
+SSF,Property & Construction,Property Fund & Real Estate Investment Trusts
+SSP,Resources,Energy & Utilities
+SSSC,Services,Professional Services
+SST,Services,Professional Services
+STA,Agro & Food Industry,Agribusiness
+STANLY,Technology,Electronic Components
+STC,Services,Transportation & Logistics
+STECON2,Services,Professional Services
+STGT,Consumer Products,Home & Office Products
+STI,Property & Construction,Construction Services
+STOWER,Services,Professional Services
+STP,Consumer Products,Personal Products & Pharmaceuticals
+STPI,Property & Construction,Construction Services
+SUC,Property & Construction,Construction Services
+SUN,Technology,Information & Communication Technology
+SUPER,Resources,Energy & Utilities
+SUSCO,Resources,Energy & Utilities
+SUTHA,Property & Construction,Property Development
+SVI,Technology,Electronic Components
+SVOA,Technology,Information & Communication Technology
+SVR,Services,Professional Services
+SVT,Technology,Electronic Components
+SWC,Services,Professional Services
+SYMC,Technology,Information & Communication Technology
+SYNEX,Technology,Information & Communication Technology
+SYNTEC,Property & Construction,Construction Services
+TACC,Agro & Food Industry,Food & Beverage
+TAE,Resources,Energy & Utilities
+TAKUNI,Services,Professional Services
+TASCO,Resources,Energy & Utilities
+TBN,Services,Professional Services
+TC,Services,Professional Services
+TCAP,Financials,Finance & Securities
+TCC,Services,Commerce
+TCMC,Services,Health Care Services
+TEAMG,Technology,Information & Communication Technology
+TEGH,Services,Tourisms & Leisure
+TEKA,Industrials,Industrial Materials & Machine
+TFG,Agro & Food Industry,Agribusiness
+TFI,Services,Professional Services
+TFM,Services,Commerce
+TFMAMA,Agro & Food Industry,Food & Beverage
+TGE,Services,Professional Services
+TGH,Services,Health Care Services
+THANA,Financials,Finance & Securities
+THANI,Financials,Finance & Securities
+THCOM,Technology,Information & Communication Technology
+THG,Services,Professional Services
+THIP,Services,Transportation & Logistics
+THRE,Services,Professional Services
+THREL,Financials,Finance & Securities
+TIPH,Services,Transportation & Logistics
+TISCO,Financials,Banking
+TITLE,Property & Construction,Property Development
+TK,Services,Professional Services
+TKN,Services,Commerce
+TKS,Technology,Information & Communication Technology
+TKT,Services,Commerce
+TLI,Financials,Insurance
+TM,Services,Professional Services
+TMC,Services,Professional Services
+TMD,Services,Professional Services
+TMI,Financials,Insurance
+TMILL,Services,Transportation & Logistics
+TMT,Industrials,Steel & Metal Products
+TNDT,Services,Professional Services
+TNITY,Technology,Information & Communication Technology
+TNL,Services,Transportation & Logistics
+TNP,Services,Commerce
+TNR,Property & Construction,Property Development
+TOA,Consumer Products,Home & Office Products
+TOG,Consumer Products,Home & Office Products
+TOP,Resources,Energy & Utilities
+TOPP,Industrials,Petrochemicals & Chemicals
+TPA,Property & Construction,Construction Materials
+TPAC,Industrials,Packaging
+TPBI,Industrials,Packaging
+TPCH,Resources,Energy & Utilities
+TPCS,Services,Professional Services
+TPIPL,Industrials,Petrochemicals & Chemicals
+TPIPP,Resources,Energy & Utilities
+TPLAS,Industrials,Packaging
+TPOLY,Industrials,Petrochemicals & Chemicals
+TPS,Agro & Food Industry,Food & Beverage
+TQM,Financials,Finance & Securities
+TQR,Services,Professional Services
+TRP,Services,Transportation & Logistics
+TRT,Technology,Information & Communication Technology
+TRU,Agro & Food Industry,Food & Beverage
+TRUBB,Agro & Food Industry,Agribusiness
+TRUE,Technology,Information & Communication Technology
+TRV,Services,Tourisms & Leisure
+TSC,Services,Commerce
+TSTE,Services,Professional Services
+TSTH,Services,Commerce
+TTA,Services,Transportation & Logistics
+TTB,Financials,Banking
+TTCL,Property & Construction,Construction Services
+TTW,Resources,Energy & Utilities
+TU,Agro & Food Industry,Food & Beverage
+TURTLE,Services,Transportation & Logistics
+TVDH,Services,Tourisms & Leisure
+TVH,Services,Commerce
+TVO,Agro & Food Industry,Agribusiness
+TVT,Services,Professional Services
+TWPC,Resources,Energy & Utilities
+UAC,Resources,Energy & Utilities
+UBA,Services,Professional Services
+UBE,Industrials,Petrochemicals & Chemicals
+UBIS,Technology,Information & Communication Technology
+UEC,Services,Professional Services
+UKEM,Services,Professional Services
+UOBKH,Financials,Finance & Securities
+UP,Agro & Food Industry,Agribusiness
+UPF,Agro & Food Industry,Food & Beverage
+UPOIC,Agro & Food Industry,Agribusiness
+UREKA,Services,Professional Services
+UV,Services,Professional Services
+VARO,Services,Professional Services
+VCOM,Technology,Information & Communication Technology
+VGI,Services,Media & Publishing
+VIBHA,Services,Health Care Services
+VIH,Services,Health Care Services
+VL,Services,Professional Services
+VRANDA,Services,Tourisms & Leisure
+WACOAL,Services,Professional Services
+WARRIX,Consumer Products,Fashion
+WAVE,Technology,Information & Communication Technology
+WFX,Services,Professional Services
+WGE,Resources,Energy & Utilities
+WHA,Property & Construction,Property Development
+WHAUP,Resources,Energy & Utilities
+WICE,Services,Transportation & Logistics
+WIIK,Property & Construction,Construction Services
+WIN,Technology,Information & Communication Technology
+WINMED,Services,Health Care Services
+WINNER,Services,Commerce
+WP,Industrials,Industrial Materials & Machine
+XO,Agro & Food Industry,Food & Beverage
+XPG,Technology,Electronic Components
+YUASA,Industrials,Automotive
+ZAA,Services,Professional Services
+ZEN,Services,Commerce
