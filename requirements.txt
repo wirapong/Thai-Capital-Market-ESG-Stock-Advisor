@@ -8,5 +8,6 @@ pycoingecko
 requests
 statsmodels
 scikit-learn
-tensorflow
 keras
+numpy
+tensorflow-cpu
