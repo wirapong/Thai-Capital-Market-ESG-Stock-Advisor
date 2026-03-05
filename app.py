@@ -543,28 +543,7 @@ def main():
                 chart = extract_and_plot_sentiment(full_analysis)
                 if chart: st.plotly_chart(chart, use_container_width=True)
         
-        # --- แท็บ 1 & แท็บ 2 (ใช้โค้ดชุดเดิมของคุณได้เลย) ---
-        with tab1:
-            st.write(f"แสดงข้อมูล AI Analysis ของ {symbol}...")
-            # [วางโค้ดสตรีม AI เดิมของคุณที่นี่]
-            with st.spinner("🔄 กำลังดึงข้อมูลและประมวลผลด้วย AI..."):
-                data = fetch_set_esg_news_info_cached(symbol)
-                
-            if 'error' in data:
-                st.error(data['error'])
-            else:
-                prompt = f"{THAI_ESG_ADVISOR_PROMPT}\nคำถาม: วิเคราะห์ {symbol}\nข้อมูล:\n{data}"
-                
-                def stream_response():
-                    for chunk in model.stream([HumanMessage(content=prompt)]):
-                        text = chunk.content.replace("<think>", "").replace("</think>", "")
-                        yield text
-
-                st.markdown(f"### 🤖 บทวิเคราะห์เชิงโครงสร้าง: {symbol}")
-                full_analysis = st.write_stream(stream_response)
-                
-                chart = extract_and_plot_sentiment(full_analysis)
-                if chart: st.plotly_chart(chart, use_container_width=True)            
+     
             
         with tab2:
             st.write("แสดงข้อมูล DCF และ Comps...")
