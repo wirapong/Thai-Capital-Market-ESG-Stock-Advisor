@@ -50,8 +50,9 @@ ESG_DB_FILE = "esg_database.csv"
 SECTOR_MAPPING_FILE = "sector_mapping.csv"
 
 # ไฟล์ Datasets ใหม่ที่ดึงจาก GitHub
-ESG_PERFORMANCE_FILE = "Thai_SETESG_Data_2014_2024.csv"
-ESG_MARKET_FILE = "Thailand_ESG__data_30102025.csv"
+# ไฟล์ Datasets ใหม่ที่ดึงจาก GitHub
+ESG_PERFORMANCE_FILE = "Thailand_ESG__data_30102025.csv"  # 💡 
+ESG_MARKET_FILE = "Thai_SETESG_Data_2014_2024.csv"        # 💡 
 
 MODEL_CONFIG = {
     "model": "gemini-2.5-flash", 
@@ -383,65 +384,80 @@ def load_and_preprocess_quant_data(file_path: str):
     return df
 
 def run_panel_regression(df: pd.DataFrame):
-    """รัน Fixed Effects Panel Regression (ESG -> ROA)"""
+    """รัน Fixed Effects Panel Regression (ESG -> ROA/ROCE)"""
     st.write("📈 **Panel Regression Results (Fixed Effects)**")
     try:
-        # สมมติว่าในไฟล์มีคอลัมน์ Symbol, Year, ESG_Score, ROA
-        # ใช้ C(Symbol) เพื่อทำ Entity Fixed Effects
-        formula = 'ROA ~ ESG_Score + C(Symbol)'
-        model = smf.ols(formula, data=df).fit()
+        # 💡 ให้ผู้ใช้เลือกตัวแปรได้
+        target = st.selectbox("🎯 เลือกตัวแปรทางการเงิน (Dependent Variable):", ["ROA", "ROCE"])
         
-        # ดึงเฉพาะค่าสัมประสิทธิ์ของ ESG_Score มาโชว์
-        esg_coef = model.params.get('ESG_Score', 0)
-        p_value = model.pvalues.get('ESG_Score', 1)
+        # 💡 ใช้คอลัมน์ ESG และ firm_id ให้ตรงกับไฟล์ CSV
+        df_clean = df.dropna(subset=[target, 'ESG', 'firm_id'])
+        formula = f'{target} ~ ESG + C(firm_id)'
+        model = smf.ols(formula, data=df_clean).fit()
+        
+        esg_coef = model.params.get('ESG', 0)
+        p_value = model.pvalues.get('ESG', 1)
         
         col1, col2 = st.columns(2)
-        col1.metric("ESG Coefficient (Impact on ROA)", f"{esg_coef:.4f}")
+        col1.metric("ESG Coefficient (Impact)", f"{esg_coef:.4f}")
         col2.metric("P-Value (Statistical Significance)", f"{p_value:.4f}")
         
         if p_value < 0.05:
-            st.success(f"✅ ปัจจัย ESG มีผลต่อ ROA อย่างมีนัยสำคัญทางสถิติ (p < 0.05)")
+            st.success(f"✅ ปัจจัย ESG มีผลต่อ {target} อย่างมีนัยสำคัญทางสถิติ (p < 0.05)")
         else:
-            st.warning(f"⚠️ ปัจจัย ESG ยังไม่มีผลต่อ ROA อย่างมีนัยสำคัญในชุดข้อมูลนี้")
+            st.warning(f"⚠️ ปัจจัย ESG ยังไม่มีผลต่อ {target} อย่างมีนัยสำคัญในชุดข้อมูลนี้")
             
         with st.expander("📄 ดู Summary ฉบับเต็ม"):
             st.text(model.summary().tables[1].as_text())
     except Exception as e:
-        st.error(f"เกิดข้อผิดพลาดในการคำนวณ: ตรวจสอบชื่อคอลัมน์ในไฟล์ CSV ({e})")
+        st.error(f"เกิดข้อผิดพลาดในการคำนวณ: {e}")
 
 def run_granger_causality(df: pd.DataFrame):
-    """รัน Granger Causality Test (ESG Causation to ROA)"""
-    st.write("🔍 **Granger Causality Test (Does ESG precede ROA?)**")
+    """รัน Granger Causality Test (ESG Causation to ROA/ROCE)"""
+    st.write("🔍 **Granger Causality Test (Does ESG precede Financial Performance?)**")
     try:
-        # เตรียม Time Series Data ของภาพรวม
-        ts_data = df[['ROA', 'ESG_Score']].dropna()
-        # ทดสอบที่ Lag 1 และ 2 ปี
-        gc_res = grangercausalitytests(ts_data, maxlag=2, verbose=False)
+        target = st.radio("🎯 เลือกตัวแปรทดสอบความเป็นเหตุเป็นผล:", ["ROA", "ROCE"], horizontal=True)
         
+        # 💡 จัดกลุ่มเป็นภาพรวมรายปีตามที่ระบุใน CSV
+        ts_data = df.groupby('year')[[target, 'ESG']].mean().dropna()
+        
+        if len(ts_data) < 3:
+            st.warning("⚠️ จำนวนปีข้อมูลน้อยเกินไปสำหรับการทำ Granger Causality")
+            return
+            
+        # ทดสอบที่ Lag 1 ปี
+        gc_res = grangercausalitytests(ts_data, maxlag=1, verbose=False)
         p_val_lag1 = gc_res[1][0]['ssr_ftest'][1]
+        
         st.write(f"**Lag 1 Year (P-Value):** {p_val_lag1:.4f}")
         if p_val_lag1 < 0.05:
-            st.success("✅ ความเป็นเหตุเป็นผล: การทำ ESG ในปีนี้ นำไปสู่กำไร (ROA) ที่เพิ่มขึ้นในปีหน้า")
+            st.success(f"✅ ความเป็นเหตุเป็นผล: การทำ ESG ในปีนี้ นำไปสู่กำไร ({target}) ที่เปลี่ยนแปลงในปีหน้า")
         else:
-            st.info("ℹ️ ยังไม่พบความเป็นเหตุเป็นผล (Causality) ที่ชัดเจนในระยะเวลา 1 ปี")
+            st.info(f"ℹ️ ยังไม่พบความเป็นเหตุเป็นผล (Causality) ที่ชัดเจนกับ {target} ในระยะเวลา 1 ปี")
     except Exception as e:
         st.error(f"ไม่สามารถทำ Granger Causality ได้ ({e})")
 
-def build_and_train_gru(df: pd.DataFrame):
-    """Data Pipeline & GRU Model for Price Prediction"""
+# 💡 ต้องเติม symbol เป็น parameter รับค่า
+def build_and_train_gru(df: pd.DataFrame, symbol: str):
+    """Data Pipeline & GRU Model for Price/Index Prediction"""
     st.write("🤖 **Deep Learning: GRU (Gated Recurrent Unit) Forecasting**")
     if not TF_AVAILABLE:
         st.error("❌ ไม่พบไลบรารี TensorFlow กรุณาเพิ่มใน requirements.txt")
         return
         
     try:
-        # 1. Pipeline: การแบ่งข้อมูล (Time-based Split) & Scaling
-        # สมมติว่าใช้ราคาปิด (Close) ในการพยากรณ์
-        data = df['Close'].values.reshape(-1, 1)
+        # 💡 ตรวจสอบว่ามีหุ้นที่ผู้ใช้ค้นหาในไฟล์หรือไม่ ถ้าไม่มีให้ใช้ดัชนี SETESG
+        target_col = f"{symbol.upper()}.BK"
+        if target_col not in df.columns:
+            target_col = 'SETESG_Realistic_Index'
+            st.info(f"ℹ️ ไม่พบข้อมูลราคาของ {symbol} ในระบบ โมเดลจะพยากรณ์ดัชนีตลาดรวม (SETESG Index) แทน")
+        else:
+            st.info(f"ℹ️ พยากรณ์ราคาของหุ้น {symbol} จากชุดข้อมูล")
+            
+        data = df[target_col].dropna().values.reshape(-1, 1)
         scaler = MinMaxScaler(feature_range=(0, 1))
         scaled_data = scaler.fit_transform(data)
         
-        # 2. Pipeline: Rolling-window (Lookback = 60 วัน)
         look_back = 60
         X, y = [], []
         for i in range(look_back, len(scaled_data)):
@@ -450,12 +466,10 @@ def build_and_train_gru(df: pd.DataFrame):
         X, y = np.array(X), np.array(y)
         X = np.reshape(X, (X.shape[0], X.shape[1], 1))
         
-        # Time-based split (Train 80%, Test 20%)
         split = int(len(X) * 0.8)
         X_train, X_test = X[:split], X[split:]
         y_train, y_test = y[:split], y[split:]
         
-        # 3. Model Architecture (ตาม Knowledge Base: เน้นทนทาน Robust)
         model = Sequential()
         model.add(GRU(units=50, return_sequences=True, input_shape=(X_train.shape[1], 1)))
         model.add(Dropout(0.2))
@@ -465,23 +479,20 @@ def build_and_train_gru(df: pd.DataFrame):
         
         model.compile(optimizer='adam', loss='mean_squared_error')
         
-        # Train Model (รันแค่ 5 Epochs เพื่อการสาธิต (Demo) ป้องกันแอปค้าง)
-        with st.spinner("⏳ กำลังเทรนโมเดล GRU (Epoch 1/5)... อาจใช้เวลาสักครู่"):
+        with st.spinner("⏳ กำลังเทรนโมเดล GRU (Epoch 1/5)..."):
             model.fit(X_train, y_train, epochs=5, batch_size=32, validation_data=(X_test, y_test), verbose=0)
         
-        # 4. พยากรณ์และพล็อตผลลัพธ์
         predictions = model.predict(X_test)
         predictions = scaler.inverse_transform(predictions)
         y_test_scaled = scaler.inverse_transform(y_test.reshape(-1, 1))
         
-        # Plotly Chart
         fig = go.Figure()
-        fig.add_trace(go.Scatter(y=y_test_scaled.flatten(), mode='lines', name='Actual Price', line=dict(color='blue')))
+        fig.add_trace(go.Scatter(y=y_test_scaled.flatten(), mode='lines', name='Actual', line=dict(color='blue')))
         fig.add_trace(go.Scatter(y=predictions.flatten(), mode='lines', name='GRU Prediction', line=dict(color='red', dash='dot')))
-        fig.update_layout(title="GRU Model: Actual vs Predicted Price", xaxis_title="Time (Test Data)", yaxis_title="Price")
+        fig.update_layout(title=f"GRU Model: Actual vs Predicted ({target_col})", xaxis_title="Time (Test Data)", yaxis_title="Price / Index")
         st.plotly_chart(fig, use_container_width=True)
         
-        st.success("✅ โมเดล GRU ทำการพยากรณ์สำเร็จ! (ใช้ชุดข้อมูล Test Set เพื่อหลีกเลี่ยง Data Leakage)")
+        st.success("✅ โมเดล GRU ทำการพยากรณ์สำเร็จ!")
         
     except Exception as e:
         st.error(f"เกิดข้อผิดพลาดในการรัน GRU: {e}")
@@ -628,32 +639,33 @@ def main():
                 else:
                     st.error(f"❌ **Overvalued:** ตามสมมติฐานนี้ หุ้นมีราคาแพงกว่ามูลค่าที่แท้จริง (มี Downside {upside:.1f}%)")
 
-        # --------------------------------------------------
+# --------------------------------------------------
         # แท็บ 3: โมเดลวิจัยขั้นสูง (Panel, Granger, GRU)
         # --------------------------------------------------
         with tab3:
             st.markdown("### 🔬 การวิเคราะห์ผลกระทบเชิงโครงสร้าง (Structural Impact)")
-            st.info("💡 โมเดลเศรษฐมิติใช้ทดสอบสมมติฐานทางวิชาการจากไฟล์ `Thai_SETESG_Data_2014_2024.csv`")
+            st.info("💡 โมเดลเศรษฐมิติใช้ทดสอบสมมติฐานทางวิชาการจากไฟล์ `Thailand_ESG__data_30102025.csv`")
             
             df_perf = load_and_preprocess_quant_data(ESG_PERFORMANCE_FILE)
             if df_perf is not None:
-                if st.button("▶️ รันโมเดล Panel Regression & Granger Causality"):
+                if st.button("▶️ รันโมเดล Panel Regression (ESG Impact)"):
                     run_panel_regression(df_perf)
-                    st.markdown("---")
+                st.markdown("---")
+                if st.button("▶️ รันโมเดล Granger Causality"):
                     run_granger_causality(df_perf)
             else:
-                st.warning(f"ยังไม่ได้อัปโหลดไฟล์ {ESG_PERFORMANCE_FILE} ลงในโฟลเดอร์ GitHub")
+                st.warning(f"ยังไม่ได้อัปโหลดไฟล์ {ESG_PERFORMANCE_FILE}")
 
             st.markdown("<br><br>", unsafe_allow_html=True)
             st.markdown("### 🤖 การพยากรณ์ราคาด้วย Deep Learning (Price Prediction)")
-            st.info("💡 โมเดล **GRU (Gated Recurrent Unit)** ถ่วงน้ำหนัก Free-float ใช้ทดสอบพยากรณ์ราคาจากไฟล์ `Thailand_ESG__data_30102025.csv` ด้วยการแบ่งข้อมูลแบบ Rolling-window")
+            st.info("💡 โมเดล **GRU (Gated Recurrent Unit)** ถ่วงน้ำหนัก Free-float ใช้ทดสอบพยากรณ์ราคาจากไฟล์ `Thai_SETESG_Data_2014_2024.csv`")
             
             df_market = load_and_preprocess_quant_data(ESG_MARKET_FILE)
             if df_market is not None:
                 if st.button("▶️ เทรนและพยากรณ์ด้วย GRU Model"):
-                    build_and_train_gru(df_market)
+                    build_and_train_gru(df_market, symbol) # 💡 เพิ่มตัวแปร symbol ตรงนี้
             else:
-                st.warning(f"ยังไม่ได้อัปโหลดไฟล์ {ESG_MARKET_FILE} ลงในโฟลเดอร์ GitHub")
+                st.warning(f"ยังไม่ได้อัปโหลดไฟล์ {ESG_MARKET_FILE}")
 
 if __name__ == "__main__":
     main()
