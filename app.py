@@ -233,12 +233,35 @@ def fetch_thai_stock_news(symbol: str, limit: int = 5) -> list:
     except: return []
 
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+import requests
+
+# สร้าง Session พิเศษที่ตั้งค่าให้พยายามดึงข้อมูลใหม่ (Retry) อัตโนมัติหากโดนบล็อก
+def get_yf_session():
+    session = requests.Session()
+    # ถ้าเจอ Error 429 (Too Many Requests) หรือ 500, 502, 503, 504 ให้ลองใหม่ 3 ครั้ง
+    # โดยแต่ละครั้งให้เว้นระยะเวลาห่างขึ้นเรื่อยๆ (Backoff)
+    retry = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
+    return session
+
+@st.cache_data(ttl=CACHE_TTL, show_spinner=False)
 def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
     try:
-        if not symbol.upper().endswith('.BK'): symbol = f"{symbol.upper().strip()}.BK"
-        stock = yf.Ticker(symbol)
+        if not symbol.upper().endswith('.BK'):
+            symbol = f"{symbol.upper().strip()}.BK"
+            
+        # 💡 ใช้ Session ที่เราสร้างขึ้นมาส่งเข้าไปใน yfinance
+        session = get_yf_session()
+        stock = yf.Ticker(symbol, session=session)
+        
         hist = stock.history(period='6mo', interval='1d')
-        if hist.empty: raise ValueError("No data")
+        if hist.empty: raise ValueError("ไม่มีข้อมูลราคา (หรืออาจถูกจำกัดการเข้าถึงจาก Yahoo)")
+        
+        time.sleep(1) # เพิ่มการหน่วงเวลา 1 วินาที ลดความก้าวร้าวในการดึงข้อมูล
         
         info = stock.info
         clean_symbol = symbol.replace('.BK', '')
@@ -255,15 +278,20 @@ def fetch_set_esg_news_info_cached(symbol: str) -> Dict[str, Any]:
 
 
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
+@st.cache_data(ttl=CACHE_TTL, show_spinner=False)
 def get_comps_data(target_symbol: str) -> pd.DataFrame:
-    """ดึงข้อมูลทำตาราง Comps"""
-    # 💡 เปลี่ยนจากใช้ THAI_PEERS.get() เป็นการเรียกฟังก์ชันอ่าน CSV
+    """ดึงข้อมูลทำตาราง Comps พร้อมระบบ Retry ป้องกันการบล็อก"""
     tickers = get_peers_from_csv(target_symbol)
-    
     data = []
+    
+    # 💡 เรียกใช้ Session ที่ตั้งค่า Retry ไว้แล้ว
+    session = get_yf_session()
+    
     for t in tickers:
         try:
-            info = yf.Ticker(t).info
+            # 💡 ส่ง session เข้าไปใน yfinance
+            info = yf.Ticker(t, session=session).info
+            
             data.append({
                 "หุ้น (Ticker)": t.replace('.BK', ''),
                 "ราคา (THB)": info.get('currentPrice', np.nan),
@@ -271,21 +299,37 @@ def get_comps_data(target_symbol: str) -> pd.DataFrame:
                 "EV/EBITDA": info.get('enterpriseToEbitda', np.nan),
                 "P/E (Forward)": info.get('forwardPE', np.nan),
                 "P/BV": info.get('priceToBook', np.nan),
-                "Div Yield (%)": round(info.get('dividendYield', 0) or 0,2)
+                "Div Yield (%)": info.get('dividendYield', 0)
             })
-        except: pass
+            
+            # 💡 หน่วงเวลา 0.5 วินาที ก่อนดึงหุ้นคู่แข่งตัวถัดไป ป้องกันการยิง Request ถี่เกิน
+            time.sleep(0.5) 
+            
+        except Exception as e:
+            logger.warning(f"Comps Data Error for {t}: {e}")
+            pass
+            
     return pd.DataFrame(data)
 
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
+@st.cache_data(ttl=CACHE_TTL, show_spinner=False)
 def get_dcf_financials(symbol: str) -> dict:
-    """ดึงงบการเงินมาเก็บไว้ใน Cache เพื่อให้เวลาเลื่อน Slider แอปจะได้ไม่กระตุกและไม่โดนแบน API"""
+    """ดึงงบการเงินมาเก็บไว้ใน Cache พร้อมระบบ Retry ป้องกันการบล็อก"""
     if not symbol.endswith('.BK'): symbol = f"{symbol}.BK"
-    stock = yf.Ticker(symbol)
+    
+    # 💡 เรียกใช้ Session
+    session = get_yf_session()
+    
+    # 💡 ส่ง session เข้าไป
+    stock = yf.Ticker(symbol, session=session)
     
     try:
         is_df = stock.financials
         bs_df = stock.balance_sheet
         cf_df = stock.cashflow
+        
+        # 💡 หน่วงเวลาเล็กน้อยก่อนเปลี่ยนไปดึงข้อมูล info (พฤติกรรมที่ yfinance มักจะโดนบล็อก)
+        time.sleep(1)
         info = stock.info
 
         ebit = is_df.loc['EBIT'].iloc[0] if 'EBIT' in is_df.index else is_df.loc['Operating Income'].iloc[0]
@@ -307,6 +351,7 @@ def get_dcf_financials(symbol: str) -> dict:
             "shares": info.get('sharesOutstanding', 1), "price": info.get('currentPrice', 0)
         }
     except Exception as e:
+        logger.error(f"DCF Financials Error for {symbol}: {e}")
         return {"status": "error", "message": str(e)}
 
 # ==========================================
