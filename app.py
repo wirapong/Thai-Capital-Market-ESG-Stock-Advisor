@@ -142,7 +142,9 @@ def get_comps_data(target_symbol: str) -> pd.DataFrame:
         except: pass
     return pd.DataFrame(data)
 
-# ... [ใส่ฟังก์ชันดึง API Yahoo/News ตามโค้ดเดิมของคุณ] ...
+# ==========================================
+# 📊 ฟังก์ชันดึง API Yahoo/News...
+# ==========================================
 import pandas as pd
 import os
 
@@ -370,7 +372,7 @@ def extract_and_plot_sentiment(text: str) -> Optional[go.Figure]:
     except: return None
 
 # ==========================================
-# 🔬 ฟังก์ชันใหม่: Advanced ESG Quant Models
+# 🔬 ฟังก์ชัน: Advanced ESG Quant Models
 # ==========================================
 
 @st.cache_data(show_spinner=False)
@@ -537,7 +539,7 @@ def main():
                 prompt = f"{THAI_ESG_ADVISOR_PROMPT}\nคำถาม: วิเคราะห์ {symbol}\nข้อมูล:\n{data}"
                 
                 def stream_response():
-                    # 💡 ตอนนี้ระบบจะรู้จักตัวแปร model แล้วครับ!
+                    # 💡 ตอนนี้ระบบจะรู้จักตัวแปร model!
                     for chunk in model.stream([HumanMessage(content=prompt)]):
                         text = chunk.content.replace("<think>", "").replace("</think>", "")
                         yield text
@@ -660,13 +662,13 @@ def main():
 
             st.markdown("<br><br>", unsafe_allow_html=True)
             st.markdown("### 🤖 การพยากรณ์ราคาด้วย Deep Learning (Price Prediction)")
-            # ... (ส่วนของโมเดล GRU ปล่อยไว้เหมือนเดิมครับ) ...
+            # ... (ส่วนของโมเดล GRU ) ...
             st.info("💡 โมเดล **GRU (Gated Recurrent Unit)** ถ่วงน้ำหนัก Free-float ใช้ทดสอบพยากรณ์ราคาจากไฟล์ `Thai_SETESG_Data_2014_2024.csv`")
             
             df_market = load_and_preprocess_quant_data(ESG_MARKET_FILE)
             if df_market is not None:
                 if st.button("▶️ เทรนและพยากรณ์ด้วย GRU Model"):
-                    build_and_train_gru(df_market, symbol) # 💡 เพิ่มตัวแปร symbol ตรงนี้
+                    build_and_train_gru(df_market, symbol) # 💡 เพิ่มตัวแปร symbol 
             else:
                 st.warning(f"ยังไม่ได้อัปโหลดไฟล์ {ESG_MARKET_FILE}")
 
