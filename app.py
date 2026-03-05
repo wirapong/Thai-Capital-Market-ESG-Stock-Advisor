@@ -17,6 +17,10 @@ import urllib.parse
 import xml.etree.ElementTree as ET
 import requests
 
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+import requests
+
 # ---------------------------------------------------------
 # 📚 ไลบรารีสำหรับ Advanced Quant & Econometrics
 # ---------------------------------------------------------
@@ -233,9 +237,7 @@ def fetch_thai_stock_news(symbol: str, limit: int = 5) -> list:
     except: return []
 
 @st.cache_data(ttl=CACHE_TTL, show_spinner=False)
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
-import requests
+
 
 # สร้าง Session พิเศษที่ตั้งค่าให้พยายามดึงข้อมูลใหม่ (Retry) อัตโนมัติหากโดนบล็อก
 def get_yf_session():
