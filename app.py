@@ -383,14 +383,11 @@ def load_and_preprocess_quant_data(file_path: str):
     df = df.fillna(method='ffill').fillna(0) # ถ้าบรรทัดแรกหายให้ใส่ 0
     return df
 
-def run_panel_regression(df: pd.DataFrame):
+def run_panel_regression(df: pd.DataFrame, target: str): # 💡 เพิ่มตัวแปร target ตรงนี้
     """รัน Fixed Effects Panel Regression (ESG -> ROA/ROCE)"""
-    st.write("📈 **Panel Regression Results (Fixed Effects)**")
+    st.write(f"📈 **Panel Regression Results (Fixed Effects: {target})**")
     try:
-        # 💡 ให้ผู้ใช้เลือกตัวแปรได้
-        target = st.selectbox("🎯 เลือกตัวแปรทางการเงิน (Dependent Variable):", ["ROA", "ROCE"])
-        
-        # 💡 ใช้คอลัมน์ ESG และ firm_id ให้ตรงกับไฟล์ CSV
+        # 💡 ลบ st.selectbox ออกจากตรงนี้
         df_clean = df.dropna(subset=[target, 'ESG', 'firm_id'])
         formula = f'{target} ~ ESG + C(firm_id)'
         model = smf.ols(formula, data=df_clean).fit()
@@ -399,7 +396,7 @@ def run_panel_regression(df: pd.DataFrame):
         p_value = model.pvalues.get('ESG', 1)
         
         col1, col2 = st.columns(2)
-        col1.metric("ESG Coefficient (Impact)", f"{esg_coef:.4f}")
+        col1.metric(f"ESG Coefficient (Impact on {target})", f"{esg_coef:.4f}")
         col2.metric("P-Value (Statistical Significance)", f"{p_value:.4f}")
         
         if p_value < 0.05:
@@ -412,20 +409,17 @@ def run_panel_regression(df: pd.DataFrame):
     except Exception as e:
         st.error(f"เกิดข้อผิดพลาดในการคำนวณ: {e}")
 
-def run_granger_causality(df: pd.DataFrame):
-    """รัน Granger Causality Test (ESG Causation to ROA/ROCE)"""
-    st.write("🔍 **Granger Causality Test (Does ESG precede Financial Performance?)**")
+def run_granger_causality(df: pd.DataFrame, target: str): # 💡 เพิ่มตัวแปร target ตรงนี้
+    """รัน Granger Causality Test (Does ESG precede Financial Performance?)"""
+    st.write(f"🔍 **Granger Causality Test (Does ESG precede {target}?)**")
     try:
-        target = st.radio("🎯 เลือกตัวแปรทดสอบความเป็นเหตุเป็นผล:", ["ROA", "ROCE"], horizontal=True)
-        
-        # 💡 จัดกลุ่มเป็นภาพรวมรายปีตามที่ระบุใน CSV
+        # 💡 ลบ st.radio ออกจากตรงนี้
         ts_data = df.groupby('year')[[target, 'ESG']].mean().dropna()
         
         if len(ts_data) < 3:
             st.warning("⚠️ จำนวนปีข้อมูลน้อยเกินไปสำหรับการทำ Granger Causality")
             return
             
-        # ทดสอบที่ Lag 1 ปี
         gc_res = grangercausalitytests(ts_data, maxlag=1, verbose=False)
         p_val_lag1 = gc_res[1][0]['ssr_ftest'][1]
         
@@ -648,24 +642,25 @@ def main():
             
             df_perf = load_and_preprocess_quant_data(ESG_PERFORMANCE_FILE)
             if df_perf is not None:
-                if st.button("▶️ รันโมเดล Panel Regression (ESG Impact)"):
-                    run_panel_regression(df_perf)
-                st.markdown("---")
-                if st.button("▶️ รันโมเดล Granger Causality"):
-                    run_granger_causality(df_perf)
+                
+                # 💡 ย้ายกล่องเลือกตัวแปรออกมาไว้ข้างนอกปุ่มกด
+                target_var = st.selectbox("🎯 เลือกตัวแปรทางการเงิน (Dependent Variable):", ["ROA", "ROCE"])
+                
+                # 💡 จัดปุ่มให้เรียงติดกันในบรรทัดเดียว
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("▶️ รันโมเดล Panel Regression (ESG Impact)"):
+                        run_panel_regression(df_perf, target_var)
+                with col2:
+                    if st.button("▶️ รันโมเดล Granger Causality"):
+                        run_granger_causality(df_perf, target_var)
+                        
             else:
                 st.warning(f"ยังไม่ได้อัปโหลดไฟล์ {ESG_PERFORMANCE_FILE}")
 
             st.markdown("<br><br>", unsafe_allow_html=True)
             st.markdown("### 🤖 การพยากรณ์ราคาด้วย Deep Learning (Price Prediction)")
-            st.info("💡 โมเดล **GRU (Gated Recurrent Unit)** ถ่วงน้ำหนัก Free-float ใช้ทดสอบพยากรณ์ราคาจากไฟล์ `Thai_SETESG_Data_2014_2024.csv`")
-            
-            df_market = load_and_preprocess_quant_data(ESG_MARKET_FILE)
-            if df_market is not None:
-                if st.button("▶️ เทรนและพยากรณ์ด้วย GRU Model"):
-                    build_and_train_gru(df_market, symbol) # 💡 เพิ่มตัวแปร symbol ตรงนี้
-            else:
-                st.warning(f"ยังไม่ได้อัปโหลดไฟล์ {ESG_MARKET_FILE}")
+            # ... (ส่วนของโมเดล GRU ปล่อยไว้เหมือนเดิมครับ) ...
 
 if __name__ == "__main__":
     main()
