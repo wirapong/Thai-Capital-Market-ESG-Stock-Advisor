@@ -6,3 +6,7 @@ langchain-core
 langchain-google-genai
 pycoingecko
 requests
+statsmodels
+scikit-learn
+tensorflow
+keras
