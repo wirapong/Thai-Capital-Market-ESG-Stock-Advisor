@@ -333,11 +333,9 @@ Khon Kaen University (KKU), Thailand
 Visiting Scholar, Nanyang Technological University (NTU), Singapore
 ✉️ wirach@kku.ac.th | 🔗 [Scopus Profile](https://www.scopus.com/authid/detail.uri?authorId=56623107000)
 
-**Udomsak Detthamrong, Ph.D.** — Khon Kaen University
-
-**Rujiras Klangbunrueang** — Khon Kaen University
-
-**Rossukon Dasri** — Khon Kaen University
+**Umawadee Detthamrong, D.B.A.** — Khon Kaen University
+**Rasita Dasri, Ph.D.** — Khon Kaen University
+**Rapeepat Klangbunrueang** — Khon Kaen University
 
 ---
 
